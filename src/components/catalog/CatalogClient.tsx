@@ -3,12 +3,27 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Gem,
+  Instagram,
+  MessageCircle,
+  PenLine,
+  Phone,
+  Sparkles,
+} from "lucide-react";
 import { ContactActions } from "@/components/contact/ContactActions";
-import { MotionButton, MotionLink } from "@/components/ui/MotionPressable";
+import { MotionAnchor, MotionButton, MotionLink } from "@/components/ui/MotionPressable";
 import { useCatalogModel } from "@/hooks/useCatalogModel";
+import { ARTISTS, CONTACT, whatsappUrl } from "@/lib/constants";
 import { statusLabel } from "@/lib/utils";
-import { BodyMap, type BodyZone } from "./BodyMap";
+import {
+  BodyMap,
+  JEWELRY_OPTIONS,
+  type BodyZone,
+  type JewelryZone,
+  type PiercingZone,
+} from "./BodyMap";
 import { EarMap, type EarZoneId } from "./EarMap";
 
 type Category = {
@@ -29,9 +44,12 @@ type Product = {
   category: Category;
 };
 
-type Step = "face" | "ear" | "results";
+type Branch = "piercing" | "jewelry" | "tattoo";
+type Step = "branch" | "face" | "ear" | "jewelry" | "tattoo" | "results";
 
-const bodyZoneToCategories: Record<BodyZone, string[]> = {
+const VALENTINA = ARTISTS.find((a) => a.id === "valentina")!;
+
+const piercingZoneToCategories: Record<PiercingZone, string[]> = {
   orecchio: [
     "lobo",
     "lobo-superiore",
@@ -50,6 +68,9 @@ const bodyZoneToCategories: Record<BodyZone, string[]> = {
   bridge: ["bridge"],
   sopracciglio: ["sopracciglio", "eyebrow"],
   labbra: ["medusa", "labret", "monroe", "snake-eyes"],
+};
+
+const jewelryZoneToCategories: Record<JewelryZone, string[]> = {
   collane: ["collane"],
   bracciali: ["bracciali"],
   anelli: ["anelli"],
@@ -71,12 +92,15 @@ const earZoneToCategory: Record<EarZoneId, string[]> = {
   industrial: ["industrial"],
 };
 
-const zoneTitles: Record<BodyZone, string> = {
-  orecchio: "Orecchio",
+const piercingTitles: Record<PiercingZone, string> = {
+  orecchio: "Orecchio sinistro",
   naso: "Naso",
   bridge: "Bridge",
   sopracciglio: "Sopracciglio",
   labbra: "Labbra",
+};
+
+const jewelryTitles: Record<JewelryZone, string> = {
   collane: "Collane",
   bracciali: "Bracciali",
   anelli: "Anelli",
@@ -89,13 +113,22 @@ export function CatalogClient({
   products: Product[];
   categories: Category[];
 }) {
-  // Un solo modello per tutta la sessione catalogo: stesso id per volto e orecchio
   const model = useCatalogModel();
-  const [step, setStep] = useState<Step>("face");
+  const [step, setStep] = useState<Step>("branch");
+  const [branch, setBranch] = useState<Branch | null>(null);
   const [bodyZone, setBodyZone] = useState<BodyZone | null>(null);
   const [earZone, setEarZone] = useState<EarZoneId | null>(null);
 
-  function handleFaceSelect(zone: BodyZone) {
+  function chooseBranch(next: Branch) {
+    setBranch(next);
+    setBodyZone(null);
+    setEarZone(null);
+    if (next === "piercing") setStep("face");
+    else if (next === "jewelry") setStep("jewelry");
+    else setStep("tattoo");
+  }
+
+  function handleFaceSelect(zone: PiercingZone) {
     setBodyZone(zone);
     setEarZone(null);
     if (zone === "orecchio") {
@@ -103,6 +136,12 @@ export function CatalogClient({
     } else {
       setStep("results");
     }
+  }
+
+  function handleJewelrySelect(zone: JewelryZone) {
+    setBodyZone(zone);
+    setEarZone(null);
+    setStep("results");
   }
 
   function handleEarSelect(zone: EarZoneId) {
@@ -116,10 +155,22 @@ export function CatalogClient({
       setStep("ear");
       return;
     }
+    if (step === "results" && branch === "jewelry") {
+      setBodyZone(null);
+      setStep("jewelry");
+      return;
+    }
     if (step === "results" || step === "ear") {
       setBodyZone(null);
       setEarZone(null);
       setStep("face");
+      return;
+    }
+    if (step === "face" || step === "jewelry" || step === "tattoo") {
+      setBranch(null);
+      setBodyZone(null);
+      setEarZone(null);
+      setStep("branch");
     }
   }
 
@@ -131,41 +182,244 @@ export function CatalogClient({
         slugs.some((s) => p.category.slug === s || p.category.slug.includes(s))
       );
     }
-    const slugs = bodyZoneToCategories[bodyZone];
+    if (branch === "jewelry") {
+      const slugs = jewelryZoneToCategories[bodyZone as JewelryZone];
+      return products.filter((p) =>
+        slugs.some((s) => p.category.slug === s || p.category.slug.includes(s))
+      );
+    }
+    const slugs = piercingZoneToCategories[bodyZone as PiercingZone];
     return products.filter((p) =>
       slugs.some((s) => p.category.slug === s || p.category.slug.includes(s))
     );
-  }, [products, bodyZone, earZone]);
+  }, [products, bodyZone, earZone, branch]);
 
   const selectionLabel = earZone
-    ? `Orecchio · ${earZone.replace(/-/g, " ")}`
+    ? `Orecchio sinistro · ${earZone.replace(/-/g, " ")}`
     : bodyZone
-      ? zoneTitles[bodyZone]
+      ? branch === "jewelry"
+        ? jewelryTitles[bodyZone as JewelryZone]
+        : piercingTitles[bodyZone as PiercingZone]
       : "";
 
   return (
     <div>
       <AnimatePresence mode="wait">
+        {step === "branch" && (
+          <motion.div
+            key="branch"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35 }}
+            className="mx-auto max-w-3xl"
+          >
+            <div className="surface mb-8 border border-line/60 px-5 py-8 text-center sm:px-8 sm:py-10">
+              <p className="label-atelier">Catalogo</p>
+              <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
+                Cosa stai cercando?
+              </h2>
+              <p className="mx-auto mt-3 max-w-lg text-sm text-muted sm:text-base">
+                Tre percorsi, stessa cura: piercing, gioielleria o tatuaggio.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
+              <MotionButton
+                type="button"
+                onClick={() => chooseBranch("piercing")}
+                className="surface group flex flex-col items-start border border-line/60 p-5 text-left transition hover:border-khaki sm:p-6"
+              >
+                <span className="flex h-11 w-11 items-center justify-center border border-line/70 bg-paper/40 text-khaki-deep">
+                  <Sparkles className="h-5 w-5" />
+                </span>
+                <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
+                  Piercing
+                </span>
+                <span className="mt-2 text-sm leading-relaxed text-muted">
+                  Mappa del viso: orecchio, naso, labbra, sopracciglio e bridge.
+                </span>
+              </MotionButton>
+
+              <MotionButton
+                type="button"
+                onClick={() => chooseBranch("jewelry")}
+                className="surface group flex flex-col items-start border border-line/60 p-5 text-left transition hover:border-khaki sm:p-6"
+              >
+                <span className="flex h-11 w-11 items-center justify-center border border-line/70 bg-paper/40 text-khaki-deep">
+                  <Gem className="h-5 w-5" />
+                </span>
+                <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
+                  Gioielleria
+                </span>
+                <span className="mt-2 text-sm leading-relaxed text-muted">
+                  Collane, bracciali, anelli e orecchini fini.
+                </span>
+              </MotionButton>
+
+              <MotionButton
+                type="button"
+                onClick={() => chooseBranch("tattoo")}
+                className="surface group flex flex-col items-start border border-line/60 p-5 text-left transition hover:border-khaki sm:p-6"
+              >
+                <span className="flex h-11 w-11 items-center justify-center border border-line/70 bg-paper/40 text-khaki-deep">
+                  <PenLine className="h-5 w-5" />
+                </span>
+                <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
+                  Tatuaggi
+                </span>
+                <span className="mt-2 text-sm leading-relaxed text-muted">
+                  Consulenza con Valentina — stile, pelle, progetto su misura.
+                </span>
+              </MotionButton>
+            </div>
+          </motion.div>
+        )}
+
         {step === "face" && (
           <motion.div
-            key="face"
+            key={`face-${model.id}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.35 }}
             className="mx-auto max-w-xl"
           >
-            <div className="surface mb-6 border border-line/80 px-4 py-6 text-center sm:mb-8 sm:px-6">
-              <p className="label-atelier">Passo 1</p>
+            <MotionButton
+              type="button"
+              onClick={goBack}
+              className="mb-6 inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Cosa stai cercando
+            </MotionButton>
+            <div className="surface mb-6 border border-line/60 px-4 py-6 text-center sm:mb-8 sm:px-6">
+              <p className="label-atelier">Piercing · Passo 1</p>
               <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
                 Dove ti interessa?
               </h2>
               <p className="mt-3 text-sm text-muted sm:text-base">
-                Tocca una zona del viso per i piercing, oppure scegli collane,
-                bracciali e altri accessori sotto.
+                Tocca una zona del viso. Per l&apos;orecchio usa solo il
+                sinistro della persona.
               </p>
             </div>
             <BodyMap model={model} onSelect={handleFaceSelect} />
+          </motion.div>
+        )}
+
+        {step === "jewelry" && (
+          <motion.div
+            key="jewelry"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35 }}
+            className="mx-auto max-w-2xl"
+          >
+            <MotionButton
+              type="button"
+              onClick={goBack}
+              className="mb-6 inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Cosa stai cercando
+            </MotionButton>
+            <div className="surface mb-8 border border-line/60 px-4 py-6 text-center sm:px-6">
+              <p className="label-atelier">Gioielleria</p>
+              <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
+                Scegli la categoria
+              </h2>
+              <p className="mt-3 text-sm text-muted sm:text-base">
+                Quattro linee, stessa attenzione al dettaglio.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {JEWELRY_OPTIONS.map((opt) => (
+                <MotionButton
+                  key={opt.id}
+                  type="button"
+                  onClick={() => handleJewelrySelect(opt.id)}
+                  className="surface border border-line/60 px-5 py-6 text-left transition hover:border-khaki sm:px-6 sm:py-8"
+                >
+                  <span className="font-display text-xl text-ink sm:text-2xl">
+                    {opt.label}
+                  </span>
+                  <span className="mt-2 block text-sm text-muted">{opt.hint}</span>
+                </MotionButton>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {step === "tattoo" && (
+          <motion.div
+            key="tattoo"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35 }}
+            className="mx-auto max-w-2xl"
+          >
+            <MotionButton
+              type="button"
+              onClick={goBack}
+              className="mb-6 inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Cosa stai cercando
+            </MotionButton>
+
+            <article className="surface border border-line/60 p-6 sm:p-8 md:p-10">
+              <p className="label-atelier">{VALENTINA.role}</p>
+              <h2 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
+                {VALENTINA.name}
+              </h2>
+              <p className="mt-2 text-sm text-khaki-deep">{VALENTINA.specialty}</p>
+              <div className="divider-atelier my-6" />
+              <p className="text-sm leading-relaxed text-muted sm:text-base">
+                {VALENTINA.bio} In atelier accompagniamo il progetto dal primo
+                schizzo alla seduta: stile, posizionamento e tempi di
+                guarigione vengono definiti insieme, con calma e precisione.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+                Per ora questa sezione è dedicata al contatto diretto: scrivi o
+                chiama per una consulenza tatuaggio con Valentina. I testi e i
+                dettagli li affineremo insieme.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <MotionAnchor
+                  href={VALENTINA.instagram.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary inline-flex gap-2"
+                >
+                  <Instagram className="h-4 w-4" />
+                  {VALENTINA.instagram.handle}
+                </MotionAnchor>
+                <MotionAnchor
+                  href={whatsappUrl(
+                    "Ciao! Vorrei una consulenza tatuaggio con Valentina."
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost inline-flex gap-2"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp studio
+                </MotionAnchor>
+                <MotionAnchor
+                  href={CONTACT.phone.href}
+                  className="btn-ghost inline-flex gap-2"
+                >
+                  <Phone className="h-4 w-4" />
+                  {CONTACT.phone.display}
+                </MotionAnchor>
+                <MotionLink href="/prenota" className="btn-ghost">
+                  Prenota dal sito
+                </MotionLink>
+              </div>
+            </article>
           </motion.div>
         )}
 
@@ -187,9 +441,9 @@ export function CatalogClient({
               Torna al viso
             </MotionButton>
             <div className="mb-8 text-center">
-              <p className="label-atelier">Passo 2</p>
+              <p className="label-atelier">Piercing · Passo 2</p>
               <h2 className="mt-3 font-display text-3xl text-ink">
-                Quale piercing all&apos;orecchio?
+                Orecchio sinistro
               </h2>
               <p className="mt-3 text-muted">
                 Seleziona il punto esatto sulla mappa.

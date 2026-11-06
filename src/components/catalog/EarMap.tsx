@@ -35,7 +35,9 @@ export function EarMap({ model, onSelect }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      <p className="mb-4 text-center label-atelier">Piercing all&apos;orecchio</p>
+      <p className="mb-4 text-center label-atelier">
+        Orecchio sinistro — {model.label}
+      </p>
 
       <div className="relative aspect-[3/4] overflow-hidden border border-line/50 bg-paper/15 shadow-soft backdrop-blur-[2px] touch-manipulation">
         <Image

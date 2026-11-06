@@ -7,30 +7,25 @@ import { cn } from "@/lib/utils";
 import { MotionButton } from "@/components/ui/MotionPressable";
 import type { CatalogModel } from "@/lib/catalog-models";
 
-export type BodyZone =
+/** Solo zone piercing sul viso (la gioielleria ha un percorso separato). */
+export type PiercingZone =
   | "orecchio"
   | "naso"
   | "bridge"
   | "sopracciglio"
-  | "labbra"
-  | "collane"
-  | "bracciali"
-  | "anelli"
-  | "orecchini-fini";
+  | "labbra";
+
+/** Zone gioielleria (scelta dopo il ramo Jewelry). */
+export type JewelryZone = "collane" | "bracciali" | "anelli" | "orecchini-fini";
+
+export type BodyZone = PiercingZone | JewelryZone;
 
 type ZoneDef = {
-  id: BodyZone;
+  id: PiercingZone;
   label: string;
   hint: string;
   style: { top: string; left: string; width: string; height: string };
 };
-
-const jewelryZones: { id: BodyZone; label: string; hint: string }[] = [
-  { id: "collane", label: "Collane", hint: "Gioielleria collo" },
-  { id: "bracciali", label: "Bracciali", hint: "Gioielleria polso" },
-  { id: "anelli", label: "Anelli", hint: "Gioielleria mano" },
-  { id: "orecchini-fini", label: "Orecchini fini", hint: "Gioielleria orecchio" },
-];
 
 const zones: ZoneDef[] = [
   {
@@ -59,26 +54,20 @@ const zones: ZoneDef[] = [
   },
   {
     id: "orecchio",
-    label: "Orecchio",
+    label: "Orecchio sinistro",
+    // Foto frontale: orecchio SINISTRO della persona = lato DESTRO dello schermo
     hint: "Mappa dettagliata",
-    style: { top: "39%", left: "12%", width: "12%", height: "18%" },
+    style: { top: "36%", left: "76%", width: "14%", height: "22%" },
   },
 ];
 
-const rightEar = {
-  id: "orecchio" as BodyZone,
-  label: "Orecchio",
-  hint: "Mappa dettagliata",
-  style: { top: "39%", left: "76%", width: "12%", height: "18%" },
-};
-
 type Props = {
   model: CatalogModel;
-  onSelect: (zone: BodyZone) => void;
+  onSelect: (zone: PiercingZone) => void;
 };
 
 export function BodyMap({ model, onSelect }: Props) {
-  const [hovered, setHovered] = useState<BodyZone | null>(null);
+  const [hovered, setHovered] = useState<PiercingZone | null>(null);
 
   return (
     <div className="mx-auto w-full max-w-md">
@@ -103,11 +92,11 @@ export function BodyMap({ model, onSelect }: Props) {
           }}
         />
 
-        {[...zones, rightEar].map((zone, i) => {
+        {zones.map((zone) => {
           const active = hovered === zone.id;
           return (
             <button
-              key={`${zone.id}-${i}`}
+              key={zone.id}
               type="button"
               aria-label={`${zone.label}: ${zone.hint}`}
               onClick={() => onSelect(zone.id)}
@@ -162,25 +151,17 @@ export function BodyMap({ model, onSelect }: Props) {
           </MotionButton>
         ))}
       </div>
-
-      <div className="mt-8 border-t border-line pt-6">
-        <p className="mb-3 text-center text-[11px] tracking-[0.22em] text-khaki-deep uppercase">
-          Gioielleria &amp; accessori
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          {jewelryZones.map((zone) => (
-            <MotionButton
-              key={zone.id}
-              type="button"
-              onClick={() => onSelect(zone.id)}
-              className="border border-line/70 bg-paper/40 px-3 py-3 text-left backdrop-blur-sm transition hover:border-khaki hover:bg-khaki/15"
-            >
-              <span className="block text-sm text-ink">{zone.label}</span>
-              <span className="block text-[11px] text-muted">{zone.hint}</span>
-            </MotionButton>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
+
+export const JEWELRY_OPTIONS: {
+  id: JewelryZone;
+  label: string;
+  hint: string;
+}[] = [
+  { id: "collane", label: "Collane", hint: "Gioielleria collo" },
+  { id: "bracciali", label: "Bracciali", hint: "Gioielleria polso" },
+  { id: "anelli", label: "Anelli", hint: "Gioielleria mano" },
+  { id: "orecchini-fini", label: "Orecchini fini", hint: "Gioielleria orecchio" },
+];
