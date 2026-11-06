@@ -192,8 +192,24 @@ export function CatalogClient({
                 Quale piercing all&apos;orecchio?
               </h2>
               <p className="mt-3 text-muted">
-                Stesso modello del viso: seleziona il punto esatto sulla mappa.
+                Seleziona il punto esatto sulla mappa.
               </p>
+              <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-line/60 bg-paper/45 px-3 py-2 backdrop-blur-sm">
+                <span className="relative h-10 w-10 overflow-hidden rounded-full border border-line/70">
+                  <Image
+                    src={model.face}
+                    alt=""
+                    fill
+                    className="object-cover object-[center_20%]"
+                    sizes="40px"
+                    unoptimized
+                  />
+                </span>
+                <span className="text-left text-xs text-muted">
+                  Stesso modello
+                  <span className="block text-ink">{model.label}</span>
+                </span>
+              </div>
             </div>
             <EarMap model={model} onSelect={handleEarSelect} />
           </motion.div>
