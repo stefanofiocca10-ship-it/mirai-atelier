@@ -47,15 +47,15 @@ body {
 
 /* Surface panels that sit above atmosphere — glass, so lo sfondo resta visibile */
 .surface {
-  background: color-mix(in srgb, var(--paper) 52%, transparent);
-  backdrop-filter: blur(14px) saturate(1.05);
-  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  background: color-mix(in srgb, var(--paper) 38%, transparent);
+  backdrop-filter: blur(10px) saturate(1.04);
+  -webkit-backdrop-filter: blur(10px) saturate(1.04);
 }
 
 .surface-solid {
-  background: color-mix(in srgb, var(--paper) 68%, transparent);
-  backdrop-filter: blur(16px) saturate(1.05);
-  -webkit-backdrop-filter: blur(16px) saturate(1.05);
+  background: color-mix(in srgb, var(--paper) 52%, transparent);
+  backdrop-filter: blur(12px) saturate(1.04);
+  -webkit-backdrop-filter: blur(12px) saturate(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {

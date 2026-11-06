@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Instagram, MessageCircle, Phone } from "lucide-react";
 import { CONTACT, SITE, whatsappUrl } from "@/lib/constants";
-import { ContactActions } from "@/components/contact/ContactActions";
 
 export const metadata: Metadata = {
   title: "Contatti",
@@ -53,10 +52,6 @@ export default function ContattiPage() {
             <h2 className="mt-4 font-display text-xl text-ink">Instagram</h2>
             <p className="mt-2 text-sm text-muted">{CONTACT.instagram.handle}</p>
           </a>
-        </div>
-
-        <div className="mt-8 flex justify-center sm:justify-start">
-          <ContactActions variant="hero" />
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="mt-6 max-w-md px-2 text-sm leading-relaxed text-muted sm:mt-8 md:text-base"
+          className="mt-6 whitespace-nowrap px-1 text-[clamp(0.68rem,2.55vw,1.05rem)] leading-none text-muted sm:mt-8"
         >
           {SITE.tagline}
         </motion.p>
@@ -32,12 +32,12 @@ export function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.28 }}
-          className="mt-8 flex w-full max-w-sm flex-col gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center"
+          className="mt-8 flex flex-row flex-wrap items-center justify-center gap-3 sm:mt-10"
         >
-          <MotionLink href="/catalogo" className="btn-primary w-full sm:w-auto">
+          <MotionLink href="/catalogo" className="btn-primary">
             Esplora il Catalogo
           </MotionLink>
-          <MotionLink href="/prenota" className="btn-ghost w-full sm:w-auto">
+          <MotionLink href="/prenota" className="btn-primary">
             Prenota una Consulenza
           </MotionLink>
         </motion.div>
