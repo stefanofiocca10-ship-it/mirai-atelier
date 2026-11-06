@@ -29,15 +29,17 @@
 html {
   scroll-behavior: smooth;
   background: var(--background);
+  overscroll-behavior-y: none;
 }
 
 body {
   color: var(--foreground);
   background: transparent;
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100svh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 ::selection {
@@ -45,17 +47,17 @@ body {
   color: var(--ink);
 }
 
-/* Surface panels that sit above atmosphere — glass, so lo sfondo resta visibile */
+/* Surface panels that sit above atmosphere — glass, leggibile ma non opaco */
 .surface {
-  background: color-mix(in srgb, var(--paper) 38%, transparent);
-  backdrop-filter: blur(10px) saturate(1.04);
-  -webkit-backdrop-filter: blur(10px) saturate(1.04);
+  background: color-mix(in srgb, var(--paper) 48%, transparent);
+  backdrop-filter: blur(12px) saturate(1.04);
+  -webkit-backdrop-filter: blur(12px) saturate(1.04);
 }
 
 .surface-solid {
-  background: color-mix(in srgb, var(--paper) 52%, transparent);
-  backdrop-filter: blur(12px) saturate(1.04);
-  -webkit-backdrop-filter: blur(12px) saturate(1.04);
+  background: color-mix(in srgb, var(--paper) 62%, transparent);
+  backdrop-filter: blur(14px) saturate(1.04);
+  -webkit-backdrop-filter: blur(14px) saturate(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {

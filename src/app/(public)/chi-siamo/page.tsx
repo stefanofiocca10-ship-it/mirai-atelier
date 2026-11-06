@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ChiSiamoPage() {
   return (
-    <div className="min-h-[100dvh] pt-24 pb-20 sm:pt-28">
+    <div className="min-h-[100svh] pt-24 pb-20 sm:pt-28">
       <article className="mx-auto max-w-3xl px-4 sm:px-6 md:px-8">
         <div className="surface border border-line/80 p-5 sm:p-8 md:p-10">
           <div className="mb-8">

@@ -7,7 +7,7 @@ import { MotionLink } from "@/components/ui/MotionPressable";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] min-h-[100dvh] items-center justify-center overflow-hidden">
+    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
       <div className="relative z-10 mx-auto flex w-full max-w-atelier flex-col items-center px-4 pb-16 pt-24 text-center sm:px-6 md:px-8 md:pt-28">
         <motion.div
           initial={{ opacity: 0, y: 16, scale: 0.96 }}

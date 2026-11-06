@@ -22,7 +22,7 @@ export default async function CatalogoPage() {
   ]);
 
   return (
-    <div className="min-h-[100dvh] pt-24 pb-20 sm:pt-28">
+    <div className="min-h-[100svh] pt-24 pb-20 sm:pt-28">
       <div className="mx-auto max-w-atelier px-4 sm:px-6 md:px-8">
         <div className="surface mx-auto mb-8 max-w-2xl border border-line/80 px-5 py-8 text-center sm:mb-12 sm:px-8 sm:py-10">
           <p className="label-atelier">Mostra</p>

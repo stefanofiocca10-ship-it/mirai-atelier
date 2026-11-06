@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ContattiPage() {
   return (
-    <div className="min-h-[100dvh] pt-24 pb-20 sm:pt-28">
+    <div className="min-h-[100svh] pt-24 pb-20 sm:pt-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 md:px-8">
         <div className="surface border border-line/80 px-5 py-8 text-center sm:px-8 sm:py-10 sm:text-left">
           <p className="label-atelier">Contatti</p>

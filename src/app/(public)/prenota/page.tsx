@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PrenotaPage() {
   return (
-    <div className="min-h-[100dvh] pt-24 pb-20 sm:pt-28">
+    <div className="min-h-[100svh] pt-24 pb-20 sm:pt-28">
       <div className="mx-auto grid max-w-atelier gap-8 px-4 sm:px-6 md:grid-cols-2 md:gap-12 md:px-8">
         <div className="surface border border-line/80 p-5 sm:p-8">
           <p className="label-atelier">Consulenza</p>

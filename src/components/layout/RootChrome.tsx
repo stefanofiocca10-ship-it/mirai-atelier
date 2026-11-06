@@ -17,9 +17,9 @@ export function RootChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <CatalogModelProvider>
-      <div className="relative min-h-screen">
+      <div className="relative min-h-[100svh]">
         <MiraiAtmosphere />
-        <div className="relative z-10 flex min-h-screen flex-col">
+        <div className="relative z-10 flex min-h-[100svh] flex-col">
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
