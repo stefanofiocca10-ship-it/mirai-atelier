@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { SERVICE_TYPES, whatsappUrl } from "@/lib/constants";
+import { MotionAnchor, MotionButton } from "@/components/ui/MotionPressable";
 
 export function BookingForm() {
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,7 @@ export function BookingForm() {
         <p className="mt-3 text-muted">
           Ti ricontatteremo al più presto. Per urgenze puoi scriverci su WhatsApp.
         </p>
-        <a
+        <MotionAnchor
           href={whatsappUrl(
             "Ciao! Ho appena inviato una richiesta di consulenza dal sito."
           )}
@@ -58,14 +59,14 @@ export function BookingForm() {
           className="mt-6 inline-flex bg-[#25D366] px-5 py-3 text-sm text-white"
         >
           Apri WhatsApp
-        </a>
-        <button
+        </MotionAnchor>
+        <MotionButton
           type="button"
           onClick={() => setDone(false)}
           className="mt-4 block w-full text-sm text-muted hover:text-ink"
         >
           Invia un&apos;altra richiesta
-        </button>
+        </MotionButton>
       </div>
     );
   }
@@ -120,9 +121,13 @@ export function BookingForm() {
 
       {error && <p className="text-sm text-red-700">{error}</p>}
 
-      <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
+      <MotionButton
+        type="submit"
+        disabled={loading}
+        className="btn-primary w-full disabled:opacity-60"
+      >
         {loading ? "Invio…" : "Invia richiesta"}
-      </button>
+      </MotionButton>
     </form>
   );
 }

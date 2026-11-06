@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Hero } from "@/components/home/Hero";
 import { AboutPreview } from "@/components/home/AboutPreview";
 import { ContactActions } from "@/components/contact/ContactActions";
+import { MotionLink } from "@/components/ui/MotionPressable";
 
 export default function HomePage() {
   return (
@@ -21,9 +21,9 @@ export default function HomePage() {
               labbra o sopracciglio e scopri i gioielli per quella zona — oppure
               collane e bracciali.
             </p>
-            <Link href="/catalogo" className="btn-primary mt-8">
+            <MotionLink href="/catalogo" className="btn-primary mt-8">
               Apri la mappa
-            </Link>
+            </MotionLink>
           </div>
         </div>
       </section>

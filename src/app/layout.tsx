@@ -1,5 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, Plus_Jakarta_Sans } from "next/font/google";
+import "@fontsource/cinzel/latin-400.css";
+import "@fontsource/cinzel/latin-500.css";
+import "@fontsource/cinzel/latin-600.css";
+import "@fontsource/cinzel/latin-700.css";
+import "@fontsource/plus-jakarta-sans/latin-300.css";
+import "@fontsource/plus-jakarta-sans/latin-400.css";
+import "@fontsource/plus-jakarta-sans/latin-500.css";
+import "@fontsource/plus-jakarta-sans/latin-600.css";
 import "./globals.css";
 import { RootChrome } from "@/components/layout/RootChrome";
 import { SITE, CONTACT } from "@/lib/constants";
@@ -10,18 +17,6 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   themeColor: "#F4F1EB",
 };
-
-const display = Cinzel({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
-});
-
-const sans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "500", "600"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" className={`${display.variable} ${sans.variable}`}>
+    <html lang="it">
       <body className="font-sans antialiased">
         <RootChrome>{children}</RootChrome>
       </body>

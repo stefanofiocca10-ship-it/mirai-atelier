@@ -3,6 +3,7 @@
 import { Instagram, MessageCircle, Phone } from "lucide-react";
 import { CONTACT, whatsappUrl } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { MotionAnchor } from "@/components/ui/MotionPressable";
 
 type Variant = "inline" | "stack" | "hero" | "compact";
 
@@ -24,7 +25,7 @@ export function ContactActions({
 
   return (
     <div className={cn(layout, className)}>
-      <a
+      <MotionAnchor
         href={whatsappUrl()}
         target="_blank"
         rel="noopener noreferrer"
@@ -32,15 +33,15 @@ export function ContactActions({
       >
         <MessageCircle className="h-4 w-4 text-[#25D366]" />
         {showLabels && "WhatsApp"}
-      </a>
-      <a
+      </MotionAnchor>
+      <MotionAnchor
         href={CONTACT.phone.href}
         className="inline-flex items-center gap-2 border border-line px-4 py-2.5 text-sm text-ink transition hover:border-khaki"
       >
         <Phone className="h-4 w-4 text-khaki-deep" />
         {showLabels && CONTACT.phone.display}
-      </a>
-      <a
+      </MotionAnchor>
+      <MotionAnchor
         href={CONTACT.instagram.href}
         target="_blank"
         rel="noopener noreferrer"
@@ -48,7 +49,7 @@ export function ContactActions({
       >
         <Instagram className="h-4 w-4" />
         {showLabels && "Instagram"}
-      </a>
+      </MotionAnchor>
     </div>
   );
 }

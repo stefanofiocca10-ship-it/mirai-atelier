@@ -35,8 +35,8 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["Cinzel", "Georgia", "serif"],
+        sans: ['"Plus Jakarta Sans"', "system-ui", "sans-serif"],
       },
       boxShadow: {
         soft: "0 20px 60px rgba(17,17,17,0.06)",

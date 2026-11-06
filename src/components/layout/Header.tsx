@@ -79,15 +79,18 @@ export function Header() {
           </a>
         </nav>
 
-        <button
+        <motion.button
           type="button"
           className="flex h-11 w-11 items-center justify-center text-ink lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Chiudi menu" : "Apri menu"}
           aria-expanded={open}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.06 }}
+          transition={{ type: "spring", stiffness: 420, damping: 24 }}
         >
           {open ? <X /> : <Menu />}
-        </button>
+        </motion.button>
       </div>
 
       <AnimatePresence>

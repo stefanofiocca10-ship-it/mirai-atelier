@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { MotionButton } from "@/components/ui/MotionPressable";
 
 export const EAR_ZONES = [
   { id: "helix", label: "Helix", top: "16%", left: "62%", size: "9%" },
@@ -85,7 +86,7 @@ export function EarMap({ onSelect }: Props) {
 
       <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-4">
         {EAR_ZONES.map((zone) => (
-          <button
+          <MotionButton
             key={zone.id}
             type="button"
             onClick={() => onSelect(zone.id)}
@@ -99,7 +100,7 @@ export function EarMap({ onSelect }: Props) {
             )}
           >
             {zone.label}
-          </button>
+          </MotionButton>
         ))}
       </div>
     </div>

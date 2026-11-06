@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { SITE } from "@/lib/constants";
 import { Logo } from "@/components/brand/Logo";
+import { MotionLink } from "@/components/ui/MotionPressable";
 
 export function Hero() {
   return (
@@ -34,12 +34,12 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.28 }}
           className="mt-8 flex w-full max-w-sm flex-col gap-3 sm:mt-10 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center"
         >
-          <Link href="/catalogo" className="btn-primary w-full sm:w-auto">
+          <MotionLink href="/catalogo" className="btn-primary w-full sm:w-auto">
             Esplora il Catalogo
-          </Link>
-          <Link href="/prenota" className="btn-ghost w-full sm:w-auto">
+          </MotionLink>
+          <MotionLink href="/prenota" className="btn-ghost w-full sm:w-auto">
             Prenota una Consulenza
-          </Link>
+          </MotionLink>
         </motion.div>
       </div>
     </section>

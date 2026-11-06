@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Instagram } from "lucide-react";
 import { SITE, CONTACT, ARTISTS } from "@/lib/constants";
 import { ContactActions } from "@/components/contact/ContactActions";
 import { Logo } from "@/components/brand/Logo";
+import { MotionAnchor, MotionLink } from "@/components/ui/MotionPressable";
 
 export const metadata: Metadata = {
   title: "Chi siamo",
@@ -83,7 +83,7 @@ export default function ChiSiamoPage() {
                 <p className="mt-1 text-sm text-muted">{artist.specialty}</p>
                 <div className="divider-atelier my-5" />
                 <p className="text-sm leading-relaxed text-muted">{artist.bio}</p>
-                <a
+                <MotionAnchor
                   href={artist.instagram.href}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -91,19 +91,19 @@ export default function ChiSiamoPage() {
                 >
                   <Instagram className="h-4 w-4" />
                   {artist.instagram.handle}
-                </a>
+                </MotionAnchor>
               </div>
             ))}
           </div>
         </section>
 
         <div className="mt-10 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:flex-wrap">
-          <Link href="/prenota" className="btn-primary w-full sm:w-auto">
+          <MotionLink href="/prenota" className="btn-primary w-full sm:w-auto">
             Prenota una consulenza
-          </Link>
-          <Link href="/catalogo" className="btn-ghost w-full sm:w-auto">
+          </MotionLink>
+          <MotionLink href="/catalogo" className="btn-ghost w-full sm:w-auto">
             Apri il catalogo
-          </Link>
+          </MotionLink>
         </div>
 
         <div className="mt-8">

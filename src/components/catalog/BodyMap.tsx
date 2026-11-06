@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { MotionButton } from "@/components/ui/MotionPressable";
 
 export type BodyZone =
   | "orecchio"
@@ -144,7 +145,7 @@ export function BodyMap({ onSelect }: Props) {
 
       <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
         {zones.map((zone) => (
-          <button
+          <MotionButton
             key={zone.id}
             type="button"
             onClick={() => onSelect(zone.id)}
@@ -159,7 +160,7 @@ export function BodyMap({ onSelect }: Props) {
           >
             <span className="block text-sm text-ink">{zone.label}</span>
             <span className="block text-[11px] text-muted">{zone.hint}</span>
-          </button>
+          </MotionButton>
         ))}
       </div>
 
@@ -169,7 +170,7 @@ export function BodyMap({ onSelect }: Props) {
         </p>
         <div className="grid grid-cols-2 gap-2">
           {jewelryZones.map((zone) => (
-            <button
+            <MotionButton
               key={zone.id}
               type="button"
               onClick={() => onSelect(zone.id)}
@@ -177,7 +178,7 @@ export function BodyMap({ onSelect }: Props) {
             >
               <span className="block text-sm text-ink">{zone.label}</span>
               <span className="block text-[11px] text-muted">{zone.hint}</span>
-            </button>
+            </MotionButton>
           ))}
         </div>
       </div>

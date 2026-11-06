@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { ContactActions } from "@/components/contact/ContactActions";
+import { MotionButton, MotionLink } from "@/components/ui/MotionPressable";
 import { statusLabel } from "@/lib/utils";
 import { BodyMap, type BodyZone } from "./BodyMap";
 import { EarMap, type EarZoneId } from "./EarMap";
@@ -175,14 +175,14 @@ export function CatalogClient({
             transition={{ duration: 0.35 }}
             className="mx-auto max-w-xl"
           >
-            <button
+            <MotionButton
               type="button"
               onClick={goBack}
               className="mb-6 inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
             >
               <ArrowLeft className="h-4 w-4" />
               Torna al viso
-            </button>
+            </MotionButton>
             <div className="mb-8 text-center">
               <p className="label-atelier">Passo 2</p>
               <h2 className="mt-3 font-display text-3xl text-ink">
@@ -204,14 +204,14 @@ export function CatalogClient({
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.35 }}
           >
-            <button
+            <MotionButton
               type="button"
               onClick={goBack}
               className="mb-6 inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
             >
               <ArrowLeft className="h-4 w-4" />
               Cambia selezione
-            </button>
+            </MotionButton>
 
             <div className="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
               <div>
@@ -230,7 +230,7 @@ export function CatalogClient({
             ) : (
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {filtered.map((product) => (
-                  <Link
+                  <MotionLink
                     key={product.id}
                     href={`/catalogo/${product.slug}`}
                     className="group block"
@@ -262,7 +262,7 @@ export function CatalogClient({
                         {statusLabel(product.status)}
                       </p>
                     </div>
-                  </Link>
+                  </MotionLink>
                 ))}
               </div>
             )}
@@ -285,9 +285,9 @@ function EmptyCatalog({ selection }: { selection: string }) {
       <div className="mt-8 flex justify-center">
         <ContactActions />
       </div>
-      <Link href="/prenota" className="btn-ghost mt-4">
+      <MotionLink href="/prenota" className="btn-ghost mt-4">
         Prenota una consulenza
-      </Link>
+      </MotionLink>
     </div>
   );
 }

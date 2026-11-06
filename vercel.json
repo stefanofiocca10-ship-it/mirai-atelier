@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "buildCommand": "prisma generate && next build",
+  "buildCommand": "DATABASE_URL=\"file:./prisma/vercel.db\" prisma generate && DATABASE_URL=\"file:./prisma/vercel.db\" prisma db push && next build",
   "installCommand": "npm install"
 }
