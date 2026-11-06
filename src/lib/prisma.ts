@@ -1,34 +1,44 @@
 import { PrismaClient } from "@prisma/client";
-import { existsSync, copyFileSync, mkdirSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync, statSync } from "fs";
 import path from "path";
 
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+  miraiDbReady: boolean | undefined;
+};
+
 /**
- * Su Vercel il filesystem è effimero: usiamo /tmp per SQLite in preview.
- * In locale resta prisma/dev.db via DATABASE_URL.
+ * Su Vercel il filesystem è read-only tranne /tmp.
+ * Copiamo un DB pre-seedato (prisma/deploy.db) in /tmp al primo boot.
  */
 function ensureVercelSqlite() {
   if (process.env.VERCEL !== "1") return;
+  if (globalForPrisma.miraiDbReady) return;
 
   const tmpDir = "/tmp";
   const tmpDb = path.join(tmpDir, "mirai.db");
-  const bundled = path.join(process.cwd(), "prisma", "seed.db");
+  const bundled = path.join(process.cwd(), "prisma", "deploy.db");
 
   try {
-    if (!existsSync(tmpDb)) {
-      mkdirSync(tmpDir, { recursive: true });
-      if (existsSync(bundled)) {
-        copyFileSync(bundled, tmpDb);
-      }
+    mkdirSync(tmpDir, { recursive: true });
+    const needsCopy =
+      !existsSync(tmpDb) ||
+      (existsSync(bundled) &&
+        existsSync(tmpDb) &&
+        statSync(tmpDb).size < 1024);
+
+    if (needsCopy && existsSync(bundled)) {
+      copyFileSync(bundled, tmpDb);
     }
-    process.env.DATABASE_URL = `file:${tmpDb}`;
   } catch {
-    process.env.DATABASE_URL = `file:${tmpDb}`;
+    // best-effort: Prisma userà comunque il path sotto
   }
+
+  process.env.DATABASE_URL = `file:${tmpDb}`;
+  globalForPrisma.miraiDbReady = true;
 }
 
 ensureVercelSqlite();
-
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 export const prisma =
   globalForPrisma.prisma ||

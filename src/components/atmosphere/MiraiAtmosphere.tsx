@@ -1,93 +1,180 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
 
 /**
- * Sfondo atmosferico continuo: kanji 未来 dritti + tratti tattoo/piercing
- * in cachi caldo. Animazione fluida, senza rotazione dei kanji.
+ * Sfondo narrativo “video”: lastre figurative Giappone/atelier con ken-burns,
+ * kanji 未来 dritti, tratti tattoo e anelli piercing in dissolvenza.
  */
 export function MiraiAtmosphere() {
+  const reduce = useReducedMotion();
+
   return (
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
-      {/* Living gradient base */}
+      {/* Base warm paper */}
+      <div className="absolute inset-0 bg-[#EDE7DC]" />
+
+      {/* Scene A — sumi-e / Giappone (ken-burns) */}
       <motion.div
-        className="absolute inset-0"
-        style={{ backgroundColor: "#EFEBE3" }}
-        animate={{
-          background: [
-            "radial-gradient(ellipse 100% 80% at 20% 15%, rgba(196,179,150,0.45), transparent 55%), radial-gradient(ellipse 90% 70% at 80% 85%, rgba(168,146,114,0.28), transparent 50%), linear-gradient(160deg, #F7F4EE 0%, #EDE7DC 45%, #F5F1EA 100%)",
-            "radial-gradient(ellipse 100% 80% at 75% 25%, rgba(196,179,150,0.4), transparent 55%), radial-gradient(ellipse 90% 70% at 25% 80%, rgba(168,146,114,0.32), transparent 50%), linear-gradient(200deg, #F5F1EA 0%, #E8E0D0 50%, #F7F4EE 100%)",
-            "radial-gradient(ellipse 100% 80% at 20% 15%, rgba(196,179,150,0.45), transparent 55%), radial-gradient(ellipse 90% 70% at 80% 85%, rgba(168,146,114,0.28), transparent 50%), linear-gradient(160deg, #F7F4EE 0%, #EDE7DC 45%, #F5F1EA 100%)",
-          ],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-[-8%]"
+        animate={
+          reduce
+            ? undefined
+            : {
+                scale: [1.08, 1.18, 1.1],
+                x: ["0%", "-3%", "1%"],
+                y: ["0%", "-2%", "1%"],
+                opacity: [0.55, 0.75, 0.45, 0.55],
+              }
+        }
+        transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Image
+          src="/images/atmosphere/japan-ink.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+          unoptimized
+        />
+      </motion.div>
+
+      {/* Scene B — atelier piercing/tattoo (crossfade + pan) */}
+      <motion.div
+        className="absolute inset-[-10%]"
+        animate={
+          reduce
+            ? { opacity: 0.25 }
+            : {
+                scale: [1.12, 1.05, 1.16],
+                x: ["2%", "-2%", "0%"],
+                y: ["-1%", "2%", "0%"],
+                opacity: [0.15, 0.55, 0.2, 0.15],
+              }
+        }
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+      >
+        <Image
+          src="/images/atmosphere/atelier-detail.jpg"
+          alt=""
+          fill
+          className="object-cover object-[center_40%]"
+          sizes="100vw"
+          unoptimized
+        />
+      </motion.div>
+
+      {/* Warm khaki wash — unisce le due scene */}
+      <motion.div
+        className="absolute inset-0 mix-blend-multiply"
+        animate={
+          reduce
+            ? undefined
+            : {
+                background: [
+                  "radial-gradient(ellipse 90% 70% at 18% 20%, rgba(196,179,150,0.55), transparent 55%), radial-gradient(ellipse 80% 60% at 85% 80%, rgba(168,146,114,0.4), transparent 50%)",
+                  "radial-gradient(ellipse 90% 70% at 78% 30%, rgba(196,179,150,0.5), transparent 55%), radial-gradient(ellipse 80% 60% at 20% 75%, rgba(168,146,114,0.45), transparent 50%)",
+                  "radial-gradient(ellipse 90% 70% at 18% 20%, rgba(196,179,150,0.55), transparent 55%), radial-gradient(ellipse 80% 60% at 85% 80%, rgba(168,146,114,0.4), transparent 50%)",
+                ],
+              }
+        }
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Kanji — sempre dritti, solo drift + fade (no rotate) */}
+      {/* Soft light shaft — come luce da shoji */}
       <motion.div
-        className="absolute left-[-4%] top-[6%] select-none font-display text-[min(48vw,20rem)] leading-none text-khaki/30 md:left-[2%] md:text-[min(32vw,22rem)]"
-        style={{ writingMode: "horizontal-tb" }}
-        animate={{
-          y: [0, -40, 12, 0],
-          x: [0, 24, -8, 0],
-          opacity: [0.18, 0.38, 0.22, 0.18],
+        className="absolute -left-[20%] top-[-10%] h-[140%] w-[55%] rotate-12"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(255,250,240,0.28), transparent)",
         }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+        animate={reduce ? undefined : { x: ["-10%", "40%", "-10%"], opacity: [0.2, 0.45, 0.2] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Kanji story — sempre dritti */}
+      <motion.div
+        className="absolute left-[-2%] top-[4%] select-none font-display text-[min(46vw,19rem)] leading-none text-ink/[0.07] md:left-[3%] md:text-[min(30vw,20rem)]"
+        animate={
+          reduce
+            ? undefined
+            : {
+                y: [0, -28, 8, 0],
+                opacity: [0.35, 0.7, 0.4, 0.35],
+              }
+        }
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       >
         未
       </motion.div>
 
       <motion.div
-        className="absolute bottom-[2%] right-[-4%] select-none font-display text-[min(52vw,22rem)] leading-none text-khaki-deep/25 md:right-[2%] md:text-[min(34vw,24rem)]"
-        animate={{
-          y: [0, 32, -16, 0],
-          x: [0, -20, 10, 0],
-          opacity: [0.15, 0.35, 0.2, 0.15],
-        }}
-        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-[0%] right-[-3%] select-none font-display text-[min(50vw,21rem)] leading-none text-khaki-deep/30 md:right-[1%] md:text-[min(32vw,22rem)]"
+        animate={
+          reduce
+            ? undefined
+            : {
+                y: [0, 24, -10, 0],
+                opacity: [0.3, 0.65, 0.35, 0.3],
+              }
+        }
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 1 }}
       >
         来
       </motion.div>
 
+      {/* Titolo 未来 — pulse da “titolo film” */}
       <motion.div
-        className="absolute left-[8%] bottom-[18%] select-none font-display text-[min(28vw,9rem)] leading-none text-khaki/20 md:left-[12%] md:text-[8rem]"
-        animate={{
-          y: [0, -18, 0],
-          opacity: [0.1, 0.28, 0.1],
-        }}
-        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-      >
-        未
-      </motion.div>
-
-      <motion.div
-        className="absolute right-[10%] top-[22%] select-none font-display text-[min(26vw,8rem)] leading-none text-khaki-deep/18 md:text-[7rem]"
-        animate={{
-          y: [0, 20, 0],
-          opacity: [0.08, 0.26, 0.08],
-        }}
-        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-      >
-        来
-      </motion.div>
-
-      {/* Central 未来 — dritto, pulse lento */}
-      <motion.div
-        className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 select-none font-display text-[min(42vw,14rem)] tracking-[0.12em] text-khaki/12 md:text-[11rem]"
-        animate={{
-          opacity: [0.06, 0.18, 0.08, 0.06],
-          scale: [1, 1.06, 1.02, 1],
-          y: [0, -12, 0],
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-1/2 top-[40%] -translate-x-1/2 -translate-y-1/2 select-none font-display text-[min(38vw,12rem)] tracking-[0.18em] text-ink/[0.06] md:text-[10rem]"
+        animate={
+          reduce
+            ? undefined
+            : {
+                opacity: [0.25, 0.55, 0.3, 0.25],
+                scale: [1, 1.04, 1.01, 1],
+                letterSpacing: ["0.18em", "0.28em", "0.18em"],
+              }
+        }
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
       >
         未来
       </motion.div>
 
-      {/* Sinuous tattoo + piercing weave */}
+      {/* Petali / scintille — storia giapponese leggera */}
+      {!reduce &&
+        [
+          { left: "12%", delay: 0, dur: 14 },
+          { left: "28%", delay: 2.2, dur: 16 },
+          { left: "55%", delay: 1.1, dur: 13 },
+          { left: "72%", delay: 3.4, dur: 15 },
+          { left: "88%", delay: 0.6, dur: 17 },
+          { left: "41%", delay: 4.5, dur: 12 },
+        ].map((p, i) => (
+          <motion.span
+            key={i}
+            className="absolute top-[-5%] h-2.5 w-2 rounded-full bg-khaki/50 blur-[0.5px]"
+            style={{ left: p.left }}
+            animate={{
+              y: ["0vh", "110vh"],
+              x: [0, i % 2 === 0 ? 40 : -36, 12],
+              rotate: [0, 120, 260],
+              opacity: [0, 0.7, 0.5, 0],
+            }}
+            transition={{
+              duration: p.dur,
+              repeat: Infinity,
+              ease: "linear",
+              delay: p.delay,
+            }}
+          />
+        ))}
+
+      {/* SVG: tratti tattoo + anelli piercing */}
       <svg
         className="absolute inset-0 h-full w-full"
         viewBox="0 0 1440 900"
@@ -95,19 +182,19 @@ export function MiraiAtmosphere() {
         fill="none"
       >
         <defs>
-          <linearGradient id="khakiFlow" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#C4B396" stopOpacity="0" />
-            <stop offset="35%" stopColor="#A89272" stopOpacity="0.55" />
-            <stop offset="65%" stopColor="#C4B396" stopOpacity="0.5" />
+          <linearGradient id="miraiInk" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#111111" stopOpacity="0" />
+            <stop offset="40%" stopColor="#111111" stopOpacity="0.45" />
+            <stop offset="70%" stopColor="#A89272" stopOpacity="0.55" />
             <stop offset="100%" stopColor="#C4B396" stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="inkFlow" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#111111" stopOpacity="0" />
-            <stop offset="40%" stopColor="#A89272" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#111111" stopOpacity="0" />
+          <linearGradient id="miraiKhaki" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#C4B396" stopOpacity="0" />
+            <stop offset="45%" stopColor="#A89272" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#C4B396" stopOpacity="0" />
           </linearGradient>
-          <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2.5" result="b" />
+          <filter id="miraiGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.8" result="b" />
             <feMerge>
               <feMergeNode in="b" />
               <feMergeNode in="SourceGraphic" />
@@ -115,131 +202,146 @@ export function MiraiAtmosphere() {
           </filter>
         </defs>
 
-        {/* Ink ribbon — tattoo stroke */}
+        {/* Tratto tattoo che “disegna” */}
         <motion.path
-          d="M-80 260 C160 40, 340 420, 560 200 S900 40, 1120 280 S1360 520, 1520 300"
-          stroke="url(#khakiFlow)"
-          strokeWidth="1.8"
+          d="M-60 280 C180 60, 360 400, 580 180 S920 60, 1140 300 S1380 500, 1540 280"
+          stroke="url(#miraiInk)"
+          strokeWidth="2"
           strokeLinecap="round"
-          filter="url(#softGlow)"
-          animate={{
-            d: [
-              "M-80 260 C160 40, 340 420, 560 200 S900 40, 1120 280 S1360 520, 1520 300",
-              "M-80 300 C180 80, 360 380, 580 240 S920 80, 1140 320 S1380 480, 1520 340",
-              "M-80 240 C140 100, 320 400, 540 180 S880 60, 1100 260 S1340 500, 1520 280",
-              "M-80 260 C160 40, 340 420, 560 200 S900 40, 1120 280 S1360 520, 1520 300",
-            ],
-            opacity: [0.45, 0.85, 0.55, 0.45],
-          }}
+          filter="url(#miraiGlow)"
+          animate={
+            reduce
+              ? undefined
+              : {
+                  pathLength: [0.15, 1, 0.35, 0.15],
+                  opacity: [0.35, 0.85, 0.45, 0.35],
+                }
+          }
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Onda ukiyo-e stilizzata */}
+        <motion.path
+          d="M-40 700 C160 620, 280 780, 460 680 S740 560, 920 700 S1180 820, 1520 660"
+          stroke="url(#miraiKhaki)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          animate={
+            reduce
+              ? undefined
+              : {
+                  d: [
+                    "M-40 700 C160 620, 280 780, 460 680 S740 560, 920 700 S1180 820, 1520 660",
+                    "M-40 680 C180 600, 300 760, 480 660 S760 540, 940 720 S1200 800, 1520 640",
+                    "M-40 720 C140 640, 260 790, 440 700 S720 580, 900 680 S1160 840, 1520 680",
+                    "M-40 700 C160 620, 280 780, 460 680 S740 560, 920 700 S1180 820, 1520 660",
+                  ],
+                  opacity: [0.4, 0.75, 0.45, 0.4],
+                }
+          }
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Anelli piercing fluttuanti */}
+        <motion.g
+          animate={reduce ? undefined : { x: [0, 36, -12, 0], y: [0, -28, 14, 0] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <circle cx="220" cy="640" r="58" stroke="#A89272" strokeWidth="1.2" strokeOpacity="0.45" />
+          <circle cx="220" cy="640" r="32" stroke="#C4B396" strokeWidth="1" strokeOpacity="0.4" />
+          <circle cx="220" cy="640" r="3.5" fill="#A89272" fillOpacity="0.55" />
+        </motion.g>
+
+        <motion.g
+          animate={reduce ? undefined : { x: [0, -30, 16, 0], y: [0, 22, -10, 0] }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* Second ribbon — piercing arc energy */}
-        <motion.path
-          d="M-40 620 C200 760, 400 380, 640 640 S980 820, 1220 560 S1400 380, 1520 640"
-          stroke="url(#inkFlow)"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          animate={{
-            d: [
-              "M-40 620 C200 760, 400 380, 640 640 S980 820, 1220 560 S1400 380, 1520 640",
-              "M-40 580 C220 720, 420 420, 660 600 S1000 780, 1240 520 S1420 400, 1520 600",
-              "M-40 640 C180 780, 380 360, 620 660 S960 800, 1200 580 S1380 360, 1520 660",
-              "M-40 620 C200 760, 400 380, 640 640 S980 820, 1220 560 S1400 380, 1520 640",
-            ],
-            opacity: [0.35, 0.7, 0.4, 0.35],
-          }}
-          transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* Thin accent thread */}
-        <motion.path
-          d="M200 100 C400 200, 500 80, 700 160 S1000 40, 1200 140"
-          stroke="#C4B396"
-          strokeWidth="0.9"
-          strokeLinecap="round"
-          animate={{
-            pathLength: [0.2, 1, 0.3],
-            opacity: [0.2, 0.65, 0.2],
-          }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        />
-
-        {/* Piercing rings drifting */}
-        <motion.g
-          animate={{ x: [0, 30, -10, 0], y: [0, -24, 12, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
         >
-          <circle cx="240" cy="680" r="52" stroke="#C4B396" strokeWidth="1.1" strokeOpacity="0.4" />
-          <circle cx="240" cy="680" r="28" stroke="#A89272" strokeWidth="0.9" strokeOpacity="0.35" />
-          <circle cx="240" cy="680" r="3" fill="#A89272" fillOpacity="0.5" />
+          <circle cx="1180" cy="210" r="46" stroke="#111111" strokeWidth="1" strokeOpacity="0.22" />
+          <circle cx="1180" cy="210" r="22" stroke="#A89272" strokeWidth="0.9" strokeOpacity="0.4" />
         </motion.g>
 
         <motion.g
-          animate={{ x: [0, -26, 14, 0], y: [0, 20, -8, 0] }}
-          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <circle cx="1200" cy="200" r="40" stroke="#A89272" strokeWidth="1" strokeOpacity="0.38" />
-          <circle cx="1200" cy="200" r="18" stroke="#C4B396" strokeWidth="0.8" strokeOpacity="0.3" />
-        </motion.g>
-
-        <motion.g
-          animate={{ x: [0, 18, -22, 0], y: [0, -16, 10, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+          animate={reduce ? undefined : { x: [0, 20, -18, 0], y: [0, -14, 10, 0], rotate: [0, 8, -4, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          style={{ transformOrigin: "960px 740px" }}
         >
           <ellipse
-            cx="980"
-            cy="720"
-            rx="34"
-            ry="22"
+            cx="960"
+            cy="740"
+            rx="38"
+            ry="24"
             stroke="#C4B396"
-            strokeWidth="1"
-            strokeOpacity="0.35"
+            strokeWidth="1.1"
+            strokeOpacity="0.42"
           />
         </motion.g>
 
-        {/* Floating studs / spark points */}
+        {/* Studs / punti luce */}
         {[
-          [140, 180, 6],
-          [480, 740, 7],
-          [720, 90, 5],
-          [1080, 520, 8],
-          [860, 380, 6.5],
-          [320, 420, 5.5],
-          [1300, 780, 7],
+          [160, 160, 7],
+          [520, 760, 8],
+          [760, 100, 6],
+          [1040, 480, 9],
+          [880, 360, 7],
+          [340, 400, 6.5],
+          [1280, 760, 8],
         ].map(([x, y, dur], i) => (
           <motion.circle
             key={`${x}-${y}`}
             cx={x}
             cy={y}
-            r="2.8"
+            r="2.6"
             fill="#A89272"
-            animate={{
-              opacity: [0.1, 0.85, 0.15],
-              r: [2, 4.5, 2],
-              cy: [y, y - 18, y],
-            }}
+            animate={
+              reduce
+                ? undefined
+                : {
+                    opacity: [0.15, 0.9, 0.2],
+                    r: [2, 4.2, 2],
+                    cy: [y, y - 22, y],
+                  }
+            }
             transition={{
               duration: Number(dur),
               repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 0.55,
+              delay: i * 0.5,
             }}
           />
         ))}
       </svg>
 
-      {/* Soft veil for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-paper/35 via-transparent to-paper/45" />
-      <motion.div
-        className="absolute inset-0"
-        animate={{ opacity: [0.15, 0.35, 0.15] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      {/* Film grain leggero */}
+      <div
+        className="absolute inset-0 opacity-[0.12] mix-blend-multiply"
         style={{
-          background:
-            "radial-gradient(circle at 50% 40%, rgba(255,255,255,0.25), transparent 60%)",
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")",
+          backgroundSize: "180px 180px",
         }}
       />
+
+      {/* Vignette + velo leggibilità */}
+      <div className="absolute inset-0 bg-gradient-to-b from-paper/50 via-paper/15 to-paper/55" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 35%, rgba(244,241,235,0.55) 100%)",
+        }}
+      />
+
+      {!reduce && (
+        <motion.div
+          className="absolute inset-0"
+          animate={{ opacity: [0.12, 0.28, 0.12] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            background:
+              "radial-gradient(circle at 50% 38%, rgba(255,252,245,0.35), transparent 58%)",
+          }}
+        />
+      )}
     </div>
   );
 }

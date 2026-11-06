@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { statusLabel } from "@/lib/utils";
 import { deleteProductAction } from "@/app/admin/(dashboard)/prodotti/actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminProdottiPage() {
   const products = await prisma.product.findMany({
     orderBy: [{ updatedAt: "desc" }],

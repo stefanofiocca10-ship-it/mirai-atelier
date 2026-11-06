@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MotionButton } from "@/components/ui/MotionPressable";
+import { useCatalogModel } from "@/hooks/useCatalogModel";
 
 export const EAR_ZONES = [
   { id: "helix", label: "Helix", top: "16%", left: "62%", size: "9%" },
@@ -29,6 +30,8 @@ type Props = {
 
 export function EarMap({ onSelect }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const model = useCatalogModel();
+  const earSrc = model.ear;
 
   return (
     <div className="mx-auto w-full max-w-lg">
@@ -36,8 +39,9 @@ export function EarMap({ onSelect }: Props) {
 
       <div className="relative aspect-[3/4] overflow-hidden border border-line/80 bg-paper/40 shadow-soft touch-manipulation">
         <Image
-          src="/images/ear-map.jpg"
-          alt="Mappa interattiva dell'orecchio"
+          key={earSrc}
+          src={earSrc}
+          alt={`Mappa interattiva dell'orecchio — ${model.label}`}
           fill
           priority
           className="object-cover object-center"

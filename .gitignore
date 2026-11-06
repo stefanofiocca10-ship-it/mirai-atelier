@@ -34,6 +34,7 @@ prisma/*.db
 prisma/*.db-journal
 *.db
 *.db-journal
+!prisma/deploy.db
 
 # uploads utente (mantieni la cartella)
 public/uploads/*

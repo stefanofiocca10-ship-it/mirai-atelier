@@ -10,11 +10,11 @@ type Props = {
 };
 
 const sizes = {
-  nav: { width: 80, height: 80, className: "h-11 w-11 md:h-12 md:w-12" },
-  md: { width: 140, height: 140, className: "h-20 w-20 md:h-24 md:w-24" },
+  nav: { width: 96, height: 96, className: "h-11 w-11 md:h-12 md:w-12" },
+  md: { width: 180, height: 180, className: "h-20 w-20 md:h-24 md:w-24" },
   hero: {
-    width: 520,
-    height: 520,
+    width: 640,
+    height: 640,
     className: "h-52 w-52 sm:h-64 sm:w-64 md:h-80 md:w-80",
   },
 } as const;
@@ -34,7 +34,7 @@ export function Logo({
       height={s.height}
       priority={priority}
       className={cn(
-        "rounded-full object-cover shadow-[0_1px_0_rgba(0,0,0,0.04)]",
+        "object-contain drop-shadow-[0_8px_24px_rgba(17,17,17,0.08)]",
         s.className,
         className
       )}

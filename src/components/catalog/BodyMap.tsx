@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MotionButton } from "@/components/ui/MotionPressable";
+import { useCatalogModel } from "@/hooks/useCatalogModel";
 
 export type BodyZone =
   | "orecchio"
@@ -79,13 +80,16 @@ type Props = {
 
 export function BodyMap({ onSelect }: Props) {
   const [hovered, setHovered] = useState<BodyZone | null>(null);
+  const model = useCatalogModel();
+  const faceSrc = model.face;
 
   return (
     <div className="mx-auto w-full max-w-md">
       <div className="relative aspect-[3/4] overflow-hidden border border-line/80 bg-paper/40 shadow-soft touch-manipulation">
         <Image
-          src="/images/face-map.jpg"
-          alt="Mappa interattiva del viso — seleziona una zona"
+          key={faceSrc}
+          src={faceSrc}
+          alt={`Mappa interattiva del viso — ${model.label}`}
           fill
           priority
           className="object-cover object-[center_15%]"

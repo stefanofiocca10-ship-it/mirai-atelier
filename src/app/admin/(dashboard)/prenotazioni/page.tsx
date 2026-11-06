@@ -5,6 +5,8 @@ import { BOOKING_STATUSES, SERVICE_TYPES } from "@/lib/constants";
 import { statusLabel } from "@/lib/utils";
 import { updateBookingStatusAction } from "@/app/admin/(dashboard)/prenotazioni/actions";
 
+export const dynamic = "force-dynamic";
+
 function serviceLabel(value: string) {
   return SERVICE_TYPES.find((s) => s.value === value)?.label ?? value;
 }
