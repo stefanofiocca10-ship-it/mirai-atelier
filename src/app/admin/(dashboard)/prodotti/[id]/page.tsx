@@ -10,9 +10,12 @@ export default async function ModificaProdottoPage({ params }: PageProps) {
   const { id } = await params;
 
   const [product, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id } }),
+    prisma.product.findUnique({
+      where: { id },
+      include: { categories: { include: { category: true } } },
+    }),
     prisma.category.findMany({
-      orderBy: [{ group: "asc" }, { sortOrder: "asc" }, { name: "asc" }],
+      orderBy: [{ kind: "asc" }, { zone: "asc" }, { sortOrder: "asc" }],
     }),
   ]);
 
@@ -23,11 +26,9 @@ export default async function ModificaProdottoPage({ params }: PageProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-3xl text-[var(--cream)]">
-          Modifica prodotto
-        </h1>
-        <p className="mt-2 text-sm text-[var(--stone)]">
-          Aggiorna i dettagli o sostituisci l&apos;immagine.
+        <h1 className="font-display text-3xl text-ink">Modifica prodotto</h1>
+        <p className="mt-2 text-sm text-muted">
+          Aggiorna dettagli, categorie multiple o immagine.
         </p>
       </div>
       <ProductForm categories={categories} mode="edit" product={product} />

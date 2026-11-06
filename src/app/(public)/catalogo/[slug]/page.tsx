@@ -24,10 +24,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductPage({ params }: Props) {
   const product = await prisma.product.findUnique({
     where: { slug: params.slug },
-    include: { category: true },
+    include: {
+      categories: { include: { category: true } },
+    },
   });
 
   if (!product) notFound();
+
+  const categoryNames = product.categories.map((pc) => pc.category.name);
 
   return (
     <div className="min-h-screen pt-28 pb-20">
@@ -56,7 +60,9 @@ export default async function ProductPage({ params }: Props) {
           >
             ← Catalogo
           </Link>
-          <p className="mt-6 label-atelier">{product.category.name}</p>
+          <p className="mt-6 label-atelier">
+            {categoryNames.length ? categoryNames.join(" · ") : "Catalogo"}
+          </p>
           <h1 className="mt-3 font-display text-4xl text-ink md:text-5xl">
             {product.title}
           </h1>

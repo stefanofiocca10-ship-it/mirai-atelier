@@ -30,7 +30,8 @@ type Category = {
   id: string;
   name: string;
   slug: string;
-  group: string;
+  kind: string;
+  zone: string;
 };
 
 type Product = {
@@ -40,9 +41,29 @@ type Product = {
   material: string | null;
   status: string;
   imageUrl: string | null;
-  categoryId: string;
-  category: Category;
+  categories: { category: Category }[];
 };
+
+function productMatchesSlugs(product: Product, slugs: string[]) {
+  return product.categories.some((pc) =>
+    slugs.some((s) => pc.category.slug === s || pc.category.slug.includes(s))
+  );
+}
+
+function productMatchesZone(product: Product, zone: string, kind?: string) {
+  return product.categories.some(
+    (pc) =>
+      pc.category.zone === zone &&
+      (!kind || pc.category.kind === kind)
+  );
+}
+
+function productCategoryLabel(product: Product) {
+  const names = product.categories.map((pc) => pc.category.name);
+  if (!names.length) return "Catalogo";
+  if (names.length === 1) return names[0];
+  return `${names[0]} +${names.length - 1}`;
+}
 
 type Branch = "piercing" | "jewelry" | "tattoo";
 type Step = "branch" | "face" | "ear" | "jewelry" | "tattoo" | "results";
@@ -178,19 +199,23 @@ export function CatalogClient({
     if (!bodyZone) return [];
     if (earZone) {
       const slugs = earZoneToCategory[earZone];
-      return products.filter((p) =>
-        slugs.some((s) => p.category.slug === s || p.category.slug.includes(s))
-      );
+      return products.filter((p) => productMatchesSlugs(p, slugs));
     }
     if (branch === "jewelry") {
-      const slugs = jewelryZoneToCategories[bodyZone as JewelryZone];
-      return products.filter((p) =>
-        slugs.some((s) => p.category.slug === s || p.category.slug.includes(s))
+      const zone = bodyZone as JewelryZone;
+      const slugs = jewelryZoneToCategories[zone];
+      return products.filter(
+        (p) =>
+          productMatchesZone(p, zone, "JEWELRY") ||
+          productMatchesSlugs(p, slugs)
       );
     }
-    const slugs = piercingZoneToCategories[bodyZone as PiercingZone];
-    return products.filter((p) =>
-      slugs.some((s) => p.category.slug === s || p.category.slug.includes(s))
+    const zone = bodyZone as PiercingZone;
+    const slugs = piercingZoneToCategories[zone];
+    return products.filter(
+      (p) =>
+        productMatchesZone(p, zone, "PIERCING") ||
+        productMatchesSlugs(p, slugs)
     );
   }, [products, bodyZone, earZone, branch]);
 
@@ -523,14 +548,14 @@ export function CatalogClient({
                         </div>
                       )}
                     </div>
-                    <div className="mt-3 space-y-1">
-                      <p className="text-[10px] tracking-[0.2em] text-muted-soft uppercase">
-                        {product.category.name}
+                    <div className="surface mt-3 space-y-1 border border-line/50 px-3 py-3">
+                      <p className="text-[10px] tracking-[0.2em] text-ink-soft uppercase">
+                        {productCategoryLabel(product)}
                       </p>
                       <h3 className="font-display text-lg text-ink group-hover:text-khaki-deep">
                         {product.title}
                       </h3>
-                      <p className="text-sm text-muted">
+                      <p className="text-sm text-ink-soft">
                         {product.material ?? "Su richiesta"} ·{" "}
                         {statusLabel(product.status)}
                       </p>

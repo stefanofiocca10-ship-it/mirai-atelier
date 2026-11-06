@@ -9,6 +9,7 @@ import { Logo } from "@/components/brand/Logo";
 const nav = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/prodotti", label: "Prodotti" },
+  { href: "/admin/categorie", label: "Categorie" },
   { href: "/admin/prenotazioni", label: "Prenotazioni" },
 ] as const;
 

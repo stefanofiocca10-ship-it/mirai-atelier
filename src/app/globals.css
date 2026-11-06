@@ -8,12 +8,12 @@
   --paper-warm: #efebe4;
   --ink: #111111;
   --ink-soft: #2a2a2a;
-  --muted: #6b6560;
-  --muted-soft: #9a948c;
+  --muted: #4f4a45;
+  --muted-soft: #6f6963;
   --line: #e6e1d8;
   --line-strong: #d4cfc5;
-  --khaki: #c4b396;
-  --khaki-deep: #a89272;
+  --khaki: #b8a686;
+  --khaki-deep: #8a7356;
   --khaki-soft: #e9e2d4;
   --background: #f4f1eb;
   --foreground: var(--ink);
@@ -47,17 +47,17 @@ body {
   color: var(--ink);
 }
 
-/* Surface panels that sit above atmosphere — glass, leggibile ma non opaco */
+/* Surface panels that sit above atmosphere — glass, più leggibile */
 .surface {
-  background: color-mix(in srgb, var(--paper) 48%, transparent);
-  backdrop-filter: blur(12px) saturate(1.04);
-  -webkit-backdrop-filter: blur(12px) saturate(1.04);
+  background: color-mix(in srgb, var(--paper) 68%, transparent);
+  backdrop-filter: blur(14px) saturate(1.04);
+  -webkit-backdrop-filter: blur(14px) saturate(1.04);
 }
 
 .surface-solid {
-  background: color-mix(in srgb, var(--paper) 62%, transparent);
-  backdrop-filter: blur(14px) saturate(1.04);
-  -webkit-backdrop-filter: blur(14px) saturate(1.04);
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  backdrop-filter: blur(16px) saturate(1.04);
+  -webkit-backdrop-filter: blur(16px) saturate(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {

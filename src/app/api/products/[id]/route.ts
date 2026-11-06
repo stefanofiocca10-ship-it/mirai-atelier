@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/api-auth";
 import { PRODUCT_STATUSES } from "@/lib/constants";
+import { isAssignableCategory } from "@/lib/categories";
 import { slugify } from "@/lib/utils";
 
 const productStatusEnum = PRODUCT_STATUSES.map((s) => s.value) as [
@@ -28,12 +29,16 @@ const updateSchema = z.object({
   description: z.string().nullable().optional(),
   material: z.string().nullable().optional(),
   status: z.enum(productStatusEnum).optional(),
-  categoryId: z.string().min(1).optional(),
+  categoryIds: z.array(z.string().min(1)).min(1).optional(),
   featured: z.boolean().optional(),
   imageUrl: imageUrlField,
 });
 
 type RouteContext = { params: Promise<{ id: string }> };
+
+const productInclude = {
+  categories: { include: { category: true } },
+} as const;
 
 async function ensureUniqueProductSlugExcluding(
   base: string,
@@ -51,14 +56,11 @@ async function ensureUniqueProductSlugExcluding(
   }
 }
 
-export async function GET(
-  _request: Request,
-  context: RouteContext
-) {
+export async function GET(_request: Request, context: RouteContext) {
   const { id } = await context.params;
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { category: true },
+    include: productInclude,
   });
   if (!product) {
     return NextResponse.json({ error: "Non trovato" }, { status: 404 });
@@ -94,12 +96,21 @@ export async function PUT(request: Request, context: RouteContext) {
 
   const data = parsed.data;
 
-  if (data.categoryId) {
-    const cat = await prisma.category.findUnique({
-      where: { id: data.categoryId },
+  if (data.categoryIds) {
+    const cats = await prisma.category.findMany({
+      where: { id: { in: data.categoryIds } },
     });
-    if (!cat) {
-      return NextResponse.json({ error: "Categoria non trovata" }, { status: 400 });
+    if (cats.length !== data.categoryIds.length) {
+      return NextResponse.json(
+        { error: "Una o più categorie non esistono" },
+        { status: 400 }
+      );
+    }
+    if (!cats.every(isAssignableCategory)) {
+      return NextResponse.json(
+        { error: "Puoi collegare solo sottocategorie (non le zone)" },
+        { status: 400 }
+      );
     }
   }
 
@@ -117,19 +128,31 @@ export async function PUT(request: Request, context: RouteContext) {
         ? null
         : data.imageUrl;
 
-  const updated = await prisma.product.update({
-    where: { id },
-    data: {
-      title: data.title?.trim() ?? undefined,
-      slug: nextSlug,
-      description:
-        data.description === undefined ? undefined : data.description,
-      material: data.material === undefined ? undefined : data.material,
-      status: data.status ?? undefined,
-      categoryId: data.categoryId ?? undefined,
-      featured: data.featured ?? undefined,
-      imageUrl: imageUrlResolved,
-    },
+  const updated = await prisma.$transaction(async (tx) => {
+    if (data.categoryIds) {
+      await tx.productCategory.deleteMany({ where: { productId: id } });
+      await tx.productCategory.createMany({
+        data: data.categoryIds.map((categoryId) => ({
+          productId: id,
+          categoryId,
+        })),
+      });
+    }
+
+    return tx.product.update({
+      where: { id },
+      data: {
+        title: data.title?.trim() ?? undefined,
+        slug: nextSlug,
+        description:
+          data.description === undefined ? undefined : data.description,
+        material: data.material === undefined ? undefined : data.material,
+        status: data.status ?? undefined,
+        featured: data.featured ?? undefined,
+        imageUrl: imageUrlResolved,
+      },
+      include: productInclude,
+    });
   });
 
   return NextResponse.json(updated);

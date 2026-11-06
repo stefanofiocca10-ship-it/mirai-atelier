@@ -59,45 +59,88 @@ export const ARTISTS = [
   },
 ] as const;
 
+export const CATALOG_KINDS = [
+  { value: "PIERCING", label: "Piercing" },
+  { value: "JEWELRY", label: "Gioielleria" },
+] as const;
+
+export type CatalogKind = (typeof CATALOG_KINDS)[number]["value"];
+
+/**
+ * Albero catalogo allineato alla mappa pubblica.
+ * Piercing: zona → sottotipi (leaf assegnabili).
+ * Jewelry: la zona è già leaf assegnabile (items vuoti).
+ */
+export const CATALOG_TREE = {
+  PIERCING: [
+    {
+      zone: "orecchio",
+      label: "Orecchio",
+      items: [
+        "Lobo",
+        "Lobo Superiore",
+        "Helix",
+        "Forward Helix",
+        "Flat",
+        "Tragus",
+        "Anti-Trago",
+        "Conch",
+        "Industrial",
+        "Rook",
+        "Daith",
+        "Snug",
+      ],
+    },
+    {
+      zone: "naso",
+      label: "Naso",
+      items: ["Nostril", "Septum"],
+    },
+    {
+      zone: "bridge",
+      label: "Bridge",
+      items: ["Bridge"],
+    },
+    {
+      zone: "sopracciglio",
+      label: "Sopracciglio",
+      items: ["Sopracciglio"],
+    },
+    {
+      zone: "labbra",
+      label: "Labbra",
+      items: ["Medusa", "Labret", "Monroe", "Snake Eyes"],
+    },
+    {
+      zone: "speciali",
+      label: "Speciali",
+      items: ["Dermal Anchor", "Piercing Corpo"],
+    },
+  ],
+  JEWELRY: [
+    { zone: "collane", label: "Collane", items: [] as string[] },
+    { zone: "bracciali", label: "Bracciali", items: [] as string[] },
+    { zone: "anelli", label: "Anelli", items: [] as string[] },
+    {
+      zone: "orecchini-fini",
+      label: "Orecchini fini",
+      items: [] as string[],
+    },
+  ],
+} as const;
+
+/** @deprecated usa CATALOG_TREE — mantenuto per compatibilità seed legacy */
 export const CATEGORY_GROUPS = [
-  {
-    id: "orecchio",
-    label: "Orecchio",
-    items: [
-      "Lobo",
-      "Lobo Superiore",
-      "Helix",
-      "Forward Helix",
-      "Flat",
-      "Tragus",
-      "Anti-Trago",
-      "Conch",
-      "Industrial",
-      "Rook",
-      "Daith",
-      "Snug",
-    ],
-  },
-  {
-    id: "naso-viso",
-    label: "Naso & Viso",
-    items: ["Nostril", "Septum", "Bridge", "Sopracciglio"],
-  },
-  {
-    id: "labbra-orale",
-    label: "Labbra & Cavo Orale",
-    items: ["Medusa", "Labret", "Monroe", "Snake Eyes"],
-  },
-  {
-    id: "speciali",
-    label: "Speciali",
-    items: ["Dermal Anchor", "Piercing Corpo"],
-  },
-  {
-    id: "gioielleria",
-    label: "Gioielleria & Accessori",
-    items: ["Bracciali", "Collane", "Orecchini fini", "Anelli"],
-  },
+  ...CATALOG_TREE.PIERCING.map((z) => ({
+    id: z.zone,
+    label: z.label,
+    items: z.items,
+  })),
+  ...CATALOG_TREE.JEWELRY.map((z) => ({
+    id: z.zone,
+    label: z.label,
+    items: z.items.length ? z.items : [z.label],
+  })),
 ] as const;
 
 export const PRODUCT_STATUSES = [

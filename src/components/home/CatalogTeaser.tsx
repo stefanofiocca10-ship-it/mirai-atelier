@@ -12,7 +12,7 @@ type ProductCard = {
   material: string | null;
   status: string;
   imageUrl: string | null;
-  category: { name: string };
+  categories: { category: { name: string } }[];
 };
 
 export function CatalogTeaser({ products }: { products: ProductCard[] }) {
@@ -67,7 +67,10 @@ export function CatalogTeaser({ products }: { products: ProductCard[] }) {
                 </div>
                 <div className="mt-4 space-y-1">
                   <p className="text-[11px] tracking-[0.2em] text-muted-soft uppercase">
-                    {product.category.name}
+                    {product.categories[0]?.category.name ?? "Catalogo"}
+                    {product.categories.length > 1
+                      ? ` +${product.categories.length - 1}`
+                      : ""}
                   </p>
                   <h3 className="font-display text-xl text-ink group-hover:text-khaki-deep">
                     {product.title}

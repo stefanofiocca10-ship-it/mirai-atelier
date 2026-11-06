@@ -213,12 +213,12 @@ export function MiraiAtmosphere() {
       />
 
       {/* Velatura carta — testo leggibile, foto ancora visibile */}
-      <div className="absolute inset-0 bg-gradient-to-b from-paper/22 via-paper/12 to-paper/26" />
+      <div className="absolute inset-0 bg-gradient-to-b from-paper/32 via-paper/20 to-paper/36" />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at center, transparent 48%, rgba(244,241,235,0.28) 100%)",
+            "radial-gradient(ellipse at center, transparent 42%, rgba(244,241,235,0.4) 100%)",
         }}
       />
     </div>
