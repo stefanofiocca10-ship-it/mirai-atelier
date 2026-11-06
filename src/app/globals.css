@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #ffffff;
+  --paper-soft: #f6f4f0;
+  --paper-warm: #efebe4;
+  --ink: #111111;
+  --ink-soft: #2a2a2a;
+  --muted: #6b6560;
+  --muted-soft: #9a948c;
+  --line: #e6e1d8;
+  --line-strong: #d4cfc5;
+  --khaki: #c4b396;
+  --khaki-deep: #a89272;
+  --khaki-soft: #e9e2d4;
+  --background: #f4f1eb;
+  --foreground: var(--ink);
+  --cream: var(--ink);
+  --charcoal: var(--paper-soft);
+  --stone: var(--muted-soft);
+  --sand: var(--muted);
+  --gold: var(--khaki-deep);
+  --terracotta: var(--ink);
+  --terracotta-deep: var(--ink-soft);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--khaki) 45%, white);
+  color: var(--ink);
+}
+
+/* Surface panels that sit above atmosphere */
+.surface {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.surface-solid {
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .label-atelier {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--khaki-deep);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    transition: background 0.2s ease;
+    min-height: 44px;
+  }
+
+  .btn-primary:hover {
+    background: var(--ink-soft);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    color: var(--ink);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    transition: border-color 0.2s ease, color 0.2s ease;
+    min-height: 44px;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--khaki);
+    color: var(--khaki-deep);
+  }
+
+  .field-atelier {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--ink);
+    min-height: 44px;
+  }
+
+  .field-atelier::placeholder {
+    color: var(--muted-soft);
+  }
+
+  .field-atelier:focus {
+    outline: none;
+    border-color: var(--khaki);
+  }
+
+  .divider-atelier {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--khaki) 65%, transparent),
+      transparent
+    );
+  }
+}

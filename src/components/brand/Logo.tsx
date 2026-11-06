@@ -1,0 +1,51 @@
+import Image from "next/image";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+type Props = {
+  size?: "nav" | "md" | "hero";
+  href?: string | null;
+  className?: string;
+  priority?: boolean;
+};
+
+const sizes = {
+  nav: { width: 80, height: 80, className: "h-11 w-11 md:h-12 md:w-12" },
+  md: { width: 140, height: 140, className: "h-20 w-20 md:h-24 md:w-24" },
+  hero: {
+    width: 520,
+    height: 520,
+    className: "h-52 w-52 sm:h-64 sm:w-64 md:h-80 md:w-80",
+  },
+} as const;
+
+export function Logo({
+  size = "nav",
+  href = "/",
+  className,
+  priority = false,
+}: Props) {
+  const s = sizes[size];
+  const image = (
+    <Image
+      src="/images/logo-mirai.png"
+      alt="Mirai Tattoo Piercing Atelier"
+      width={s.width}
+      height={s.height}
+      priority={priority}
+      className={cn(
+        "rounded-full object-cover shadow-[0_1px_0_rgba(0,0,0,0.04)]",
+        s.className,
+        className
+      )}
+    />
+  );
+
+  if (href === null) return image;
+
+  return (
+    <Link href={href} className="inline-flex shrink-0" aria-label="Mirai — Home">
+      {image}
+    </Link>
+  );
+}
