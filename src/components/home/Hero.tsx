@@ -15,7 +15,7 @@ export function Hero() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="relative"
         >
-          <div className="absolute inset-0 -z-10 scale-110 rounded-full bg-paper/70 blur-3xl" />
+          <div className="absolute inset-0 -z-10 scale-110 rounded-full bg-paper/35 blur-3xl" />
           <Logo size="hero" href={null} priority />
         </motion.div>
 

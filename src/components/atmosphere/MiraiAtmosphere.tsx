@@ -321,24 +321,24 @@ export function MiraiAtmosphere() {
         }}
       />
 
-      {/* Vignette + velo leggibilità */}
-      <div className="absolute inset-0 bg-gradient-to-b from-paper/50 via-paper/15 to-paper/55" />
+      {/* Vignette leggera — non copre la scena */}
+      <div className="absolute inset-0 bg-gradient-to-b from-paper/25 via-transparent to-paper/30" />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at center, transparent 35%, rgba(244,241,235,0.55) 100%)",
+            "radial-gradient(ellipse at center, transparent 42%, rgba(244,241,235,0.28) 100%)",
         }}
       />
 
       {!reduce && (
         <motion.div
           className="absolute inset-0"
-          animate={{ opacity: [0.12, 0.28, 0.12] }}
+          animate={{ opacity: [0.08, 0.18, 0.08] }}
           transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
           style={{
             background:
-              "radial-gradient(circle at 50% 38%, rgba(255,252,245,0.35), transparent 58%)",
+              "radial-gradient(circle at 50% 38%, rgba(255,252,245,0.22), transparent 58%)",
           }}
         />
       )}

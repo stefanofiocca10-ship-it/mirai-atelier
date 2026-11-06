@@ -43,7 +43,7 @@ export function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-all duration-300",
         scrolled || open
-          ? "border-b border-line/80 bg-paper/85 backdrop-blur-md"
+          ? "border-b border-line/50 bg-paper/45 backdrop-blur-md"
           : "bg-transparent"
       )}
     >
@@ -99,7 +99,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-line bg-paper/95 backdrop-blur-md lg:hidden"
+            className="border-t border-line/60 bg-paper/55 backdrop-blur-md lg:hidden"
           >
             <div className="flex max-h-[80dvh] flex-col gap-1 overflow-y-auto px-4 py-4">
               {links.map((link) => (

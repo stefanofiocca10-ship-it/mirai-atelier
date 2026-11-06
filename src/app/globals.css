@@ -28,11 +28,12 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--background);
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: transparent;
   min-height: 100vh;
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
@@ -44,17 +45,17 @@ body {
   color: var(--ink);
 }
 
-/* Surface panels that sit above atmosphere */
+/* Surface panels that sit above atmosphere — glass, so lo sfondo resta visibile */
 .surface {
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--paper) 52%, transparent);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
 }
 
 .surface-solid {
-  background: color-mix(in srgb, var(--paper) 94%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--paper) 68%, transparent);
+  backdrop-filter: blur(16px) saturate(1.05);
+  -webkit-backdrop-filter: blur(16px) saturate(1.05);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -128,7 +129,9 @@ body {
     align-items: center;
     justify-content: center;
     border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    background: color-mix(in srgb, var(--paper) 42%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: var(--ink);
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;

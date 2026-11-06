@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   return (
-    <div className="min-h-screen bg-paper pt-28 pb-20">
+    <div className="min-h-screen pt-28 pb-20">
       <div className="mx-auto grid max-w-atelier gap-10 px-5 md:grid-cols-2 md:gap-16 md:px-8">
         <div className="relative aspect-[4/5] overflow-hidden border border-line bg-paper-soft">
           {product.imageUrl ? (

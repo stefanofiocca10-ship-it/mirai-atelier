@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MotionButton } from "@/components/ui/MotionPressable";
-import { useCatalogModel } from "@/hooks/useCatalogModel";
+import type { CatalogModel } from "@/lib/catalog-models";
 
 export const EAR_ZONES = [
   { id: "helix", label: "Helix", top: "16%", left: "62%", size: "9%" },
@@ -25,23 +25,23 @@ export const EAR_ZONES = [
 export type EarZoneId = (typeof EAR_ZONES)[number]["id"];
 
 type Props = {
+  /** Stesso modello del viso: l'orecchio è sempre la coppia di model.id */
+  model: CatalogModel;
   onSelect: (zone: EarZoneId) => void;
 };
 
-export function EarMap({ onSelect }: Props) {
+export function EarMap({ model, onSelect }: Props) {
   const [hovered, setHovered] = useState<string | null>(null);
-  const model = useCatalogModel();
-  const earSrc = model.ear;
 
   return (
     <div className="mx-auto w-full max-w-lg">
       <p className="mb-4 text-center label-atelier">Piercing all&apos;orecchio</p>
 
-      <div className="relative aspect-[3/4] overflow-hidden border border-line/80 bg-paper/40 shadow-soft touch-manipulation">
+      <div className="relative aspect-[3/4] overflow-hidden border border-line/50 bg-paper/15 shadow-soft backdrop-blur-[2px] touch-manipulation">
         <Image
-          key={earSrc}
-          src={earSrc}
-          alt={`Mappa interattiva dell'orecchio — ${model.label}`}
+          key={`ear-${model.id}`}
+          src={model.ear}
+          alt={`Mappa orecchio — ${model.label}`}
           fill
           priority
           className="object-cover object-center"
@@ -79,7 +79,7 @@ export function EarMap({ onSelect }: Props) {
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 border border-line bg-paper/95 px-4 py-2 shadow-lift"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 border border-line/60 bg-paper/55 px-4 py-2 shadow-lift backdrop-blur-md"
           >
             <p className="font-display text-sm text-ink">
               {EAR_ZONES.find((z) => z.id === hovered)?.label}
@@ -97,10 +97,10 @@ export function EarMap({ onSelect }: Props) {
             onMouseEnter={() => setHovered(zone.id)}
             onMouseLeave={() => setHovered(null)}
             className={cn(
-              "border px-2 py-2 text-[11px] transition",
+              "border px-2 py-2 text-[11px] backdrop-blur-sm transition",
               hovered === zone.id
-                ? "border-khaki bg-khaki/15 text-ink"
-                : "border-line text-muted hover:border-khaki/50 hover:text-ink"
+                ? "border-khaki bg-khaki/20 text-ink"
+                : "border-line/70 bg-paper/35 text-muted hover:border-khaki/50 hover:bg-paper/50 hover:text-ink"
             )}
           >
             {zone.label}

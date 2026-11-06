@@ -4,7 +4,7 @@ import { Logo } from "@/components/brand/Logo";
 
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t border-line/70 bg-paper/75 backdrop-blur-md">
+    <footer className="relative z-10 border-t border-line/50 bg-paper/40 backdrop-blur-md">
       <div className="mx-auto grid max-w-atelier gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 md:gap-12 md:px-8 md:py-16">
         <div>
           <Logo size="md" />

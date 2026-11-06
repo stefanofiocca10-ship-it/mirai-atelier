@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { ContactActions } from "@/components/contact/ContactActions";
 import { MotionButton, MotionLink } from "@/components/ui/MotionPressable";
+import { useCatalogModel } from "@/hooks/useCatalogModel";
 import { statusLabel } from "@/lib/utils";
 import { BodyMap, type BodyZone } from "./BodyMap";
 import { EarMap, type EarZoneId } from "./EarMap";
@@ -88,6 +89,8 @@ export function CatalogClient({
   products: Product[];
   categories: Category[];
 }) {
+  // Un solo modello per tutta la sessione catalogo: stesso id per volto e orecchio
+  const model = useCatalogModel();
   const [step, setStep] = useState<Step>("face");
   const [bodyZone, setBodyZone] = useState<BodyZone | null>(null);
   const [earZone, setEarZone] = useState<EarZoneId | null>(null);
@@ -162,13 +165,13 @@ export function CatalogClient({
                 bracciali e altri accessori sotto.
               </p>
             </div>
-            <BodyMap onSelect={handleFaceSelect} />
+            <BodyMap model={model} onSelect={handleFaceSelect} />
           </motion.div>
         )}
 
         {step === "ear" && (
           <motion.div
-            key="ear"
+            key={`ear-${model.id}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
@@ -189,10 +192,10 @@ export function CatalogClient({
                 Quale piercing all&apos;orecchio?
               </h2>
               <p className="mt-3 text-muted">
-                Seleziona il punto esatto sulla mappa.
+                Stesso modello del viso: seleziona il punto esatto sulla mappa.
               </p>
             </div>
-            <EarMap onSelect={handleEarSelect} />
+            <EarMap model={model} onSelect={handleEarSelect} />
           </motion.div>
         )}
 
@@ -275,7 +278,7 @@ export function CatalogClient({
 
 function EmptyCatalog({ selection }: { selection: string }) {
   return (
-    <div className="border border-line bg-paper-soft px-6 py-16 text-center">
+    <div className="surface border border-line/60 px-6 py-16 text-center">
       <p className="font-display text-2xl text-ink">Catalogo in arrivo</p>
       <p className="mx-auto mt-3 max-w-md text-muted">
         Al momento non ci sono pezzi pubblicati per{" "}

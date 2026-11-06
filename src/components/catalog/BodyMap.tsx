@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MotionButton } from "@/components/ui/MotionPressable";
-import { useCatalogModel } from "@/hooks/useCatalogModel";
+import type { CatalogModel } from "@/lib/catalog-models";
 
 export type BodyZone =
   | "orecchio"
@@ -22,7 +22,6 @@ type ZoneDef = {
   id: BodyZone;
   label: string;
   hint: string;
-  /** percentage hotspot box */
   style: { top: string; left: string; width: string; height: string };
 };
 
@@ -66,7 +65,6 @@ const zones: ZoneDef[] = [
   },
 ];
 
-// Second ear hotspot (right)
 const rightEar = {
   id: "orecchio" as BodyZone,
   label: "Orecchio",
@@ -75,21 +73,20 @@ const rightEar = {
 };
 
 type Props = {
+  model: CatalogModel;
   onSelect: (zone: BodyZone) => void;
 };
 
-export function BodyMap({ onSelect }: Props) {
+export function BodyMap({ model, onSelect }: Props) {
   const [hovered, setHovered] = useState<BodyZone | null>(null);
-  const model = useCatalogModel();
-  const faceSrc = model.face;
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="relative aspect-[3/4] overflow-hidden border border-line/80 bg-paper/40 shadow-soft touch-manipulation">
+      <div className="relative aspect-[3/4] overflow-hidden border border-line/50 bg-paper/15 shadow-soft backdrop-blur-[2px] touch-manipulation">
         <Image
-          key={faceSrc}
-          src={faceSrc}
-          alt={`Mappa interattiva del viso — ${model.label}`}
+          key={`face-${model.id}`}
+          src={model.face}
+          alt={`Mappa viso — ${model.label}`}
           fill
           priority
           className="object-cover object-[center_15%]"
@@ -97,13 +94,12 @@ export function BodyMap({ onSelect }: Props) {
           unoptimized
         />
 
-        {/* Soft vignette for readability */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse at center, transparent 45%, rgba(255,255,255,0.35) 100%)",
+              "radial-gradient(ellipse at center, transparent 55%, rgba(244,241,235,0.18) 100%)",
           }}
         />
 
@@ -130,12 +126,11 @@ export function BodyMap({ onSelect }: Props) {
           );
         })}
 
-        {/* Hover label */}
         {hovered && (
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 border border-line bg-paper/95 px-4 py-2 text-center shadow-lift backdrop-blur-sm"
+            className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 border border-line/60 bg-paper/55 px-4 py-2 text-center shadow-lift backdrop-blur-md"
           >
             <p className="font-display text-sm text-ink">
               {zones.find((z) => z.id === hovered)?.label}
@@ -156,10 +151,10 @@ export function BodyMap({ onSelect }: Props) {
             onMouseEnter={() => setHovered(zone.id)}
             onMouseLeave={() => setHovered(null)}
             className={cn(
-              "border px-3 py-2.5 text-left transition",
+              "border px-3 py-2.5 text-left backdrop-blur-sm transition",
               hovered === zone.id
-                ? "border-khaki bg-khaki/15"
-                : "border-line hover:border-khaki/60"
+                ? "border-khaki bg-khaki/20"
+                : "border-line/70 bg-paper/35 hover:border-khaki/60 hover:bg-paper/50"
             )}
           >
             <span className="block text-sm text-ink">{zone.label}</span>
@@ -178,7 +173,7 @@ export function BodyMap({ onSelect }: Props) {
               key={zone.id}
               type="button"
               onClick={() => onSelect(zone.id)}
-              className="border border-line bg-paper px-3 py-3 text-left transition hover:border-khaki hover:bg-khaki/10"
+              className="border border-line/70 bg-paper/40 px-3 py-3 text-left backdrop-blur-sm transition hover:border-khaki hover:bg-khaki/15"
             >
               <span className="block text-sm text-ink">{zone.label}</span>
               <span className="block text-[11px] text-muted">{zone.hint}</span>
