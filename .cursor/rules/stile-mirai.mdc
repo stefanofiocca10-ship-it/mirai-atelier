@@ -1,0 +1,45 @@
+---
+description: Stile Mirai — design system unico per sito pubblico e admin
+alwaysApply: true
+---
+
+# Stile Mirai
+
+Usa sempre lo **Stile Mirai**. Cornici = componente **`ToriiFrame`** (non bordi CSS).
+
+## Anatomia torii (obbligatoria)
+
+| Elemento | Ruolo |
+|----------|--------|
+| **Kasagi** | Trave superiore |
+| **Shimaki** | Trave subito sotto il kasagi |
+| **Daiwa** | Anello in cima agli hashira |
+| **Gakuzuka** | Targa centrale (solo Myōjin) |
+| **Kusabi** | Cunei dove il nuki attraversa i pilastri |
+| **Nuki** | Trave che attraversa gli hashira |
+| **Hashira** | Pilastri verticali |
+| **Nemaki / Daiishi** | Base a gradoni dei pilastri (`.torii-base`; gradino alto solo Myōjin) |
+
+**Resa grafica**: stile illustrativo flat (vettoriale) — campiture piatte legno chiaro `#8c7656` / ombra `#5a4834` / profondo `#3f3226`, contorno `#2b2118` ~1.2–1.4px, nessun gradiente o glow. Kasagi svasato alle estremità (Myōjin), gakuzuka decorato con cornice e borchie.
+
+| Variante | Prop | Note |
+|----------|------|------|
+| **Myōjin** | `variant="myojin"` | Kasagi curvo, shimaki, gakuzuka, kusabi |
+| **Shinmei** | `variant="shinmei"` | Linee rette, kasagi cilindrico, no gakuzuka |
+
+```tsx
+<ToriiFrame variant="myojin" contentClassName="p-6">…</ToriiFrame>
+<ToriiFrame media><Image fill … /></ToriiFrame>
+```
+
+Il lintel è SVG inline dentro `src/components/brand/ToriiFrame.tsx` (`MyojinLintel`, `ShinmeiLintel`); la larghezza degli hashira in CSS (`--mirai-hashira-w` 3.25% / Shinmei 3%) deve coincidere con le x dei pilastri nell'SVG (viewBox 800). Anche l'admin usa `ToriiFrame` (`contentClassName="panel-mirai p-6"`).
+
+## Bottoni
+
+`btn-primary` · `btn-ghost` · `btn-chip` · `btn-toggle` · `btn-sm` · `field-atelier` · `label-atelier`
+
+## Regole
+
+- Palette carta / ink / khaki.
+- Niente verde WhatsApp, viola, glow, pill CTA (FAB ok).
+- Titoli `font-display`; UI `font-sans`.

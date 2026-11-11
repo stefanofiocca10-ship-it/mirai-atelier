@@ -15,7 +15,7 @@ export function BookingStatusSelect({
   return (
     <select
       defaultValue={status}
-      className="border border-line bg-paper px-3 py-2 text-sm text-ink"
+      className="field-atelier"
       onChange={async (e) => {
         await fetch(`/api/bookings/${id}`, {
           method: "PATCH",

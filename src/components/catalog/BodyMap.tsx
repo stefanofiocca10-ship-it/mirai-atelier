@@ -54,7 +54,7 @@ const zones: ZoneDef[] = [
   },
   {
     id: "orecchio",
-    label: "Orecchio sinistro",
+    label: "Orecchio",
     // Foto frontale: orecchio SINISTRO della persona = lato DESTRO dello schermo
     hint: "Mappa dettagliata",
     style: { top: "36%", left: "76%", width: "14%", height: "22%" },
@@ -71,26 +71,27 @@ export function BodyMap({ model, onSelect }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="relative aspect-[3/4] overflow-hidden border border-line/50 bg-paper/15 shadow-soft backdrop-blur-[2px] touch-manipulation">
-        <Image
-          key={`face-${model.id}`}
-          src={model.face}
-          alt={`Mappa viso — ${model.label}`}
-          fill
-          priority
-          className="object-cover object-[center_15%]"
-          sizes="(max-width:768px) 100vw, 420px"
-          unoptimized
-        />
-
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, transparent 55%, rgba(244,241,235,0.18) 100%)",
-          }}
-        />
+      <div className="media-mirai relative aspect-[3/4] touch-manipulation">
+        <div className="media-mirai-inner">
+          <Image
+            key={`face-${model.id}`}
+            src={model.face}
+            alt="Mappa del viso per la scelta del piercing"
+            fill
+            priority
+            className="object-cover object-[center_15%]"
+            sizes="(max-width:768px) 100vw, 420px"
+            unoptimized
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, transparent 55%, rgba(244,241,235,0.18) 100%)",
+            }}
+          />
+        </div>
 
         {zones.map((zone) => {
           const active = hovered === zone.id;
@@ -119,7 +120,7 @@ export function BodyMap({ model, onSelect }: Props) {
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 border border-line/60 bg-paper/55 px-4 py-2 text-center shadow-lift backdrop-blur-md"
+            className="surface absolute bottom-5 left-1/2 z-10 -translate-x-1/2 px-4 py-2 text-center"
           >
             <p className="font-display text-sm text-ink">
               {zones.find((z) => z.id === hovered)?.label}
@@ -140,14 +141,14 @@ export function BodyMap({ model, onSelect }: Props) {
             onMouseEnter={() => setHovered(zone.id)}
             onMouseLeave={() => setHovered(null)}
             className={cn(
-              "border px-3 py-2.5 text-left backdrop-blur-sm transition",
-              hovered === zone.id
-                ? "border-khaki bg-khaki/20"
-                : "border-line/70 bg-paper/35 hover:border-khaki/60 hover:bg-paper/50"
+              "btn-chip w-full flex-col items-start gap-0.5 text-left",
+              hovered === zone.id && "is-active"
             )}
           >
-            <span className="block text-sm text-ink">{zone.label}</span>
-            <span className="block text-[11px] text-muted">{zone.hint}</span>
+            <span className="block text-sm font-medium text-ink">{zone.label}</span>
+            <span className="block text-[11px] font-normal tracking-normal text-muted">
+              {zone.hint}
+            </span>
           </MotionButton>
         ))}
       </div>

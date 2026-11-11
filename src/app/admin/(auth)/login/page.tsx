@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/brand/Logo";
+import { ToriiFrame } from "@/components/brand/ToriiFrame";
 
 function LoginForm() {
   const router = useRouter();
@@ -39,11 +40,15 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-paper px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
       <div className="mb-8">
         <Logo size="md" href={null} />
       </div>
-      <div className="w-full max-w-md border border-line bg-paper-soft p-8 shadow-soft">
+      <ToriiFrame
+        variant="myojin"
+        className="w-full max-w-md"
+        contentClassName="panel-mirai p-8"
+      >
         <p className="label-atelier text-center">Admin</p>
         <h1 className="mt-3 text-center font-display text-2xl text-ink">
           Accedi
@@ -51,7 +56,7 @@ function LoginForm() {
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">
           <label className="block text-sm">
-            <span className="mb-2 block text-muted">Email</span>
+            <span className="label-atelier mb-2 block">Email</span>
             <input
               type="email"
               required
@@ -61,7 +66,7 @@ function LoginForm() {
             />
           </label>
           <label className="block text-sm">
-            <span className="mb-2 block text-muted">Password</span>
+            <span className="label-atelier mb-2 block">Password</span>
             <input
               type="password"
               required
@@ -80,12 +85,12 @@ function LoginForm() {
           <button
             type="submit"
             disabled={pending}
-            className="btn-primary w-full disabled:opacity-60"
+            className="btn-primary w-full"
           >
             {pending ? "Accesso…" : "Entra"}
           </button>
         </form>
-      </div>
+      </ToriiFrame>
     </div>
   );
 }

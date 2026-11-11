@@ -17,20 +17,20 @@ export function FloatingContact() {
             initial={{ opacity: 0, y: 8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
-            className="flex flex-col gap-2"
+            className="flex w-[min(100vw-5rem,14rem)] flex-col gap-2"
           >
             <MotionAnchor
               href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-3 border border-line bg-white px-4 py-3 text-sm text-ink shadow-lg"
+              className="btn-ghost w-full justify-start shadow-lift"
             >
-              <MessageCircle className="h-4 w-4 shrink-0 text-[#25D366]" />
+              <MessageCircle className="h-4 w-4 shrink-0 text-khaki-deep" />
               WhatsApp
             </MotionAnchor>
             <MotionAnchor
               href={CONTACT.phone.href}
-              className="inline-flex min-h-11 items-center gap-3 border border-line bg-white px-4 py-3 text-sm text-ink shadow-lg"
+              className="btn-ghost w-full justify-start shadow-lift"
             >
               <Phone className="h-4 w-4 shrink-0 text-khaki-deep" />
               Chiama
@@ -39,14 +39,14 @@ export function FloatingContact() {
               href={CONTACT.instagram.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-3 border border-line bg-white px-4 py-3 text-sm text-ink shadow-lg"
+              className="btn-ghost w-full justify-start shadow-lift"
             >
-              <Instagram className="h-4 w-4 shrink-0" />
+              <Instagram className="h-4 w-4 shrink-0 text-khaki-deep" />
               Instagram
             </MotionAnchor>
             <MotionAnchor
               href={`mailto:${SITE.email}`}
-              className="inline-flex min-h-11 items-center gap-3 border border-line bg-white px-4 py-3 text-sm text-ink shadow-lg"
+              className="btn-ghost w-full justify-start shadow-lift"
             >
               <Mail className="h-4 w-4 shrink-0 text-khaki-deep" />
               Email
@@ -58,14 +58,14 @@ export function FloatingContact() {
       <MotionButton
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-ink text-white shadow-lg ring-2 ring-khaki/50 transition hover:bg-ink-soft hover:ring-khaki"
+        className="btn-primary h-14 w-14 min-h-0 rounded-full p-0 shadow-lift"
         aria-label={open ? "Chiudi contatti" : "Apri contatti e social"}
         aria-expanded={open}
       >
         {open ? (
-          <X className="h-6 w-6 text-white" strokeWidth={2} />
+          <X className="h-6 w-6" strokeWidth={2} />
         ) : (
-          <Share2 className="h-6 w-6 text-white" strokeWidth={2} />
+          <Share2 className="h-6 w-6" strokeWidth={2} />
         )}
       </MotionButton>
     </div>

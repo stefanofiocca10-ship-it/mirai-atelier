@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Category } from "@prisma/client";
 import { CATALOG_KINDS, type CatalogKind } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { ToriiFrame } from "@/components/brand/ToriiFrame";
 
 type Props = {
   zones: Category[];
@@ -63,13 +64,9 @@ export function CategoryAdminClient({ zones, leaves }: Props) {
 
   return (
     <div className="space-y-8">
-      <form
-        onSubmit={handleCreate}
-        className="space-y-4 rounded-xl border border-line bg-paper p-6"
-      >
-        <p className="text-xs font-medium uppercase tracking-wider text-muted">
-          Aggiungi categoria
-        </p>
+      <ToriiFrame variant="myojin" contentClassName="panel-mirai p-6">
+      <form onSubmit={handleCreate} className="space-y-4">
+        <p className="label-atelier">Aggiungi categoria</p>
         <div className="flex flex-wrap gap-2">
           {CATALOG_KINDS.map((k) => (
             <button
@@ -79,12 +76,7 @@ export function CategoryAdminClient({ zones, leaves }: Props) {
                 setKind(k.value);
                 setZone("");
               }}
-              className={cn(
-                "rounded-md border px-3 py-2 text-sm transition",
-                kind === k.value
-                  ? "border-ink bg-ink text-paper"
-                  : "border-line text-muted hover:text-ink"
-              )}
+              className={cn("btn-toggle", kind === k.value && "is-active")}
             >
               {k.label}
             </button>
@@ -95,7 +87,7 @@ export function CategoryAdminClient({ zones, leaves }: Props) {
             <select
               value={zone || kindZones[0]?.zone || ""}
               onChange={(e) => setZone(e.target.value)}
-              className="rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink outline-none ring-khaki-deep focus:ring-2"
+              className="field-atelier"
             >
               {kindZones.map((z) => (
                 <option key={z.id} value={z.zone}>
@@ -112,28 +104,28 @@ export function CategoryAdminClient({ zones, leaves }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder={kind === "PIERCING" ? "Es. Helix doppio" : "Es. Cavigliere"}
-            className="rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink placeholder:text-muted-soft outline-none ring-khaki-deep focus:ring-2 sm:col-span-1"
+            placeholder={
+              kind === "PIERCING" ? "Es. Helix doppio" : "Es. Cavigliere"
+            }
+            className="field-atelier sm:col-span-1"
           />
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded-md bg-ink px-4 py-2 text-sm font-semibold text-paper disabled:opacity-60"
-          >
+          <button type="submit" disabled={saving} className="btn-primary">
             {saving ? "…" : "Crea"}
           </button>
         </div>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         {ok ? <p className="text-sm text-khaki-deep">{ok}</p> : null}
       </form>
+      </ToriiFrame>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {kindZones.map((z) => {
           const items = kindLeaves.filter((l) => l.zone === z.zone);
           return (
-            <div
+            <ToriiFrame
               key={z.id}
-              className="rounded-xl border border-line bg-paper p-4"
+              variant="shinmei"
+              contentClassName="panel-mirai p-4"
             >
               <p className="text-sm font-medium text-ink">
                 {z.name}{" "}
@@ -141,10 +133,7 @@ export function CategoryAdminClient({ zones, leaves }: Props) {
               </p>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {items.map((leaf) => (
-                  <li
-                    key={leaf.id}
-                    className="rounded-md border border-line px-3 py-1.5 text-xs text-muted"
-                  >
+                  <li key={leaf.id} className="btn-chip pointer-events-none">
                     {leaf.name}
                   </li>
                 ))}
@@ -152,7 +141,7 @@ export function CategoryAdminClient({ zones, leaves }: Props) {
                   <li className="text-xs text-muted">Nessuna voce</li>
                 ) : null}
               </ul>
-            </div>
+            </ToriiFrame>
           );
         })}
       </div>

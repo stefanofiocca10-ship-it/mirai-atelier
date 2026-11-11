@@ -12,6 +12,7 @@ import {
   Phone,
   Sparkles,
 } from "lucide-react";
+import { ToriiFrame } from "@/components/brand/ToriiFrame";
 import { ContactActions } from "@/components/contact/ContactActions";
 import { MotionAnchor, MotionButton, MotionLink } from "@/components/ui/MotionPressable";
 import { useCatalogModel } from "@/hooks/useCatalogModel";
@@ -25,6 +26,7 @@ import {
   type PiercingZone,
 } from "./BodyMap";
 import { EarMap, type EarZoneId } from "./EarMap";
+import { ModelGenderToggle } from "./ModelGenderToggle";
 
 type Category = {
   id: string;
@@ -114,7 +116,7 @@ const earZoneToCategory: Record<EarZoneId, string[]> = {
 };
 
 const piercingTitles: Record<PiercingZone, string> = {
-  orecchio: "Orecchio sinistro",
+  orecchio: "Orecchio",
   naso: "Naso",
   bridge: "Bridge",
   sopracciglio: "Sopracciglio",
@@ -134,7 +136,7 @@ export function CatalogClient({
   products: Product[];
   categories: Category[];
 }) {
-  const model = useCatalogModel();
+  const { model } = useCatalogModel();
   const [step, setStep] = useState<Step>("branch");
   const [branch, setBranch] = useState<Branch | null>(null);
   const [bodyZone, setBodyZone] = useState<BodyZone | null>(null);
@@ -220,7 +222,7 @@ export function CatalogClient({
   }, [products, bodyZone, earZone, branch]);
 
   const selectionLabel = earZone
-    ? `Orecchio sinistro · ${earZone.replace(/-/g, " ")}`
+    ? `Orecchio · ${earZone.replace(/-/g, " ")}`
     : bodyZone
       ? branch === "jewelry"
         ? jewelryTitles[bodyZone as JewelryZone]
@@ -239,7 +241,11 @@ export function CatalogClient({
             transition={{ duration: 0.35 }}
             className="mx-auto max-w-3xl"
           >
-            <div className="surface mb-8 border border-line/60 px-5 py-8 text-center sm:px-8 sm:py-10">
+            <ToriiFrame
+              variant="myojin"
+              className="mb-8"
+              contentClassName="px-5 py-8 text-center sm:px-8 sm:py-10"
+            >
               <p className="label-atelier">Catalogo</p>
               <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
                 Cosa stai cercando?
@@ -247,56 +253,63 @@ export function CatalogClient({
               <p className="mx-auto mt-3 max-w-lg text-sm text-muted sm:text-base">
                 Tre percorsi, stessa cura: piercing, gioielleria o tatuaggio.
               </p>
-            </div>
+            </ToriiFrame>
 
-            <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
-              <MotionButton
-                type="button"
-                onClick={() => chooseBranch("piercing")}
-                className="surface group flex flex-col items-start border border-line/60 p-5 text-left transition hover:border-khaki sm:p-6"
-              >
-                <span className="flex h-11 w-11 items-center justify-center border border-line/70 bg-paper/40 text-khaki-deep">
-                  <Sparkles className="h-5 w-5" />
-                </span>
-                <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
-                  Piercing
-                </span>
-                <span className="mt-2 text-sm leading-relaxed text-muted">
-                  Mappa del viso: orecchio, naso, labbra, sopracciglio e bridge.
-                </span>
-              </MotionButton>
+            <div className="grid gap-5 sm:grid-cols-3">
+              <ToriiFrame variant="myojin">
+                <MotionButton
+                  type="button"
+                  onClick={() => chooseBranch("piercing")}
+                  className="group flex w-full flex-col items-start p-5 text-left sm:p-6"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center bg-khaki-soft text-khaki-deep">
+                    <Sparkles className="h-5 w-5" />
+                  </span>
+                  <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
+                    Piercing
+                  </span>
+                  <span className="mt-2 text-sm leading-relaxed text-muted">
+                    Mappa del viso: orecchio, naso, labbra, sopracciglio e
+                    bridge.
+                  </span>
+                </MotionButton>
+              </ToriiFrame>
 
-              <MotionButton
-                type="button"
-                onClick={() => chooseBranch("jewelry")}
-                className="surface group flex flex-col items-start border border-line/60 p-5 text-left transition hover:border-khaki sm:p-6"
-              >
-                <span className="flex h-11 w-11 items-center justify-center border border-line/70 bg-paper/40 text-khaki-deep">
-                  <Gem className="h-5 w-5" />
-                </span>
-                <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
-                  Gioielleria
-                </span>
-                <span className="mt-2 text-sm leading-relaxed text-muted">
-                  Collane, bracciali, anelli e orecchini fini.
-                </span>
-              </MotionButton>
+              <ToriiFrame variant="shinmei">
+                <MotionButton
+                  type="button"
+                  onClick={() => chooseBranch("jewelry")}
+                  className="group flex w-full flex-col items-start p-5 text-left sm:p-6"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center bg-khaki-soft text-khaki-deep">
+                    <Gem className="h-5 w-5" />
+                  </span>
+                  <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
+                    Gioielleria
+                  </span>
+                  <span className="mt-2 text-sm leading-relaxed text-muted">
+                    Collane, bracciali, anelli e orecchini fini.
+                  </span>
+                </MotionButton>
+              </ToriiFrame>
 
-              <MotionButton
-                type="button"
-                onClick={() => chooseBranch("tattoo")}
-                className="surface group flex flex-col items-start border border-line/60 p-5 text-left transition hover:border-khaki sm:p-6"
-              >
-                <span className="flex h-11 w-11 items-center justify-center border border-line/70 bg-paper/40 text-khaki-deep">
-                  <PenLine className="h-5 w-5" />
-                </span>
-                <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
-                  Tatuaggi
-                </span>
-                <span className="mt-2 text-sm leading-relaxed text-muted">
-                  Consulenza con Valentina — stile, pelle, progetto su misura.
-                </span>
-              </MotionButton>
+              <ToriiFrame variant="myojin">
+                <MotionButton
+                  type="button"
+                  onClick={() => chooseBranch("tattoo")}
+                  className="group flex w-full flex-col items-start p-5 text-left sm:p-6"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center bg-khaki-soft text-khaki-deep">
+                    <PenLine className="h-5 w-5" />
+                  </span>
+                  <span className="mt-4 font-display text-xl text-ink sm:text-2xl">
+                    Tatuaggi
+                  </span>
+                  <span className="mt-2 text-sm leading-relaxed text-muted">
+                    Consulenza con Valentina — stile, pelle, progetto su misura.
+                  </span>
+                </MotionButton>
+              </ToriiFrame>
             </div>
           </motion.div>
         )}
@@ -318,15 +331,21 @@ export function CatalogClient({
               <ArrowLeft className="h-4 w-4" />
               Cosa stai cercando
             </MotionButton>
-            <div className="surface mb-6 border border-line/60 px-4 py-6 text-center sm:mb-8 sm:px-6">
+            <ToriiFrame
+              variant="myojin"
+              className="mb-6 sm:mb-8"
+              contentClassName="px-4 py-6 text-center sm:px-6"
+            >
               <p className="label-atelier">Piercing · Passo 1</p>
               <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
                 Dove ti interessa?
               </h2>
               <p className="mt-3 text-sm text-muted sm:text-base">
-                Tocca una zona del viso. Per l&apos;orecchio usa solo il
-                sinistro della persona.
+                Tocca una zona del viso per continuare.
               </p>
+            </ToriiFrame>
+            <div className="mb-4 flex justify-center">
+              <ModelGenderToggle />
             </div>
             <BodyMap model={model} onSelect={handleFaceSelect} />
           </motion.div>
@@ -349,7 +368,11 @@ export function CatalogClient({
               <ArrowLeft className="h-4 w-4" />
               Cosa stai cercando
             </MotionButton>
-            <div className="surface mb-8 border border-line/60 px-4 py-6 text-center sm:px-6">
+            <ToriiFrame
+              variant="shinmei"
+              className="mb-8"
+              contentClassName="px-4 py-6 text-center sm:px-6"
+            >
               <p className="label-atelier">Gioielleria</p>
               <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl md:text-4xl">
                 Scegli la categoria
@@ -357,20 +380,23 @@ export function CatalogClient({
               <p className="mt-3 text-sm text-muted sm:text-base">
                 Quattro linee, stessa attenzione al dettaglio.
               </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            </ToriiFrame>
+            <div className="grid gap-4 sm:grid-cols-2">
               {JEWELRY_OPTIONS.map((opt) => (
-                <MotionButton
-                  key={opt.id}
-                  type="button"
-                  onClick={() => handleJewelrySelect(opt.id)}
-                  className="surface border border-line/60 px-5 py-6 text-left transition hover:border-khaki sm:px-6 sm:py-8"
-                >
-                  <span className="font-display text-xl text-ink sm:text-2xl">
-                    {opt.label}
-                  </span>
-                  <span className="mt-2 block text-sm text-muted">{opt.hint}</span>
-                </MotionButton>
+                <ToriiFrame key={opt.id} variant="myojin">
+                  <MotionButton
+                    type="button"
+                    onClick={() => handleJewelrySelect(opt.id)}
+                    className="w-full px-5 py-6 text-left sm:px-6 sm:py-8"
+                  >
+                    <span className="font-display text-xl text-ink sm:text-2xl">
+                      {opt.label}
+                    </span>
+                    <span className="mt-2 block text-sm text-muted">
+                      {opt.hint}
+                    </span>
+                  </MotionButton>
+                </ToriiFrame>
               ))}
             </div>
           </motion.div>
@@ -394,7 +420,11 @@ export function CatalogClient({
               Cosa stai cercando
             </MotionButton>
 
-            <article className="surface border border-line/60 p-6 sm:p-8 md:p-10">
+            <ToriiFrame
+              variant="myojin"
+              contentClassName="p-6 sm:p-8 md:p-10"
+            >
+            <article>
               <p className="label-atelier">{VALENTINA.role}</p>
               <h2 className="mt-3 font-display text-3xl text-ink sm:text-4xl">
                 {VALENTINA.name}
@@ -417,7 +447,7 @@ export function CatalogClient({
                   href={VALENTINA.instagram.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary inline-flex gap-2"
+                  className="btn-primary"
                 >
                   <Instagram className="h-4 w-4" />
                   {VALENTINA.instagram.handle}
@@ -428,23 +458,24 @@ export function CatalogClient({
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-ghost inline-flex gap-2"
+                  className="btn-ghost"
                 >
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp studio
                 </MotionAnchor>
                 <MotionAnchor
                   href={CONTACT.phone.href}
-                  className="btn-ghost inline-flex gap-2"
+                  className="btn-ghost"
                 >
                   <Phone className="h-4 w-4" />
                   {CONTACT.phone.display}
                 </MotionAnchor>
-                <MotionLink href="/prenota" className="btn-ghost">
-                  Prenota dal sito
+                <MotionLink href="/contatti" className="btn-ghost">
+                  Contattaci
                 </MotionLink>
               </div>
             </article>
+            </ToriiFrame>
           </motion.div>
         )}
 
@@ -468,26 +499,26 @@ export function CatalogClient({
             <div className="mb-8 text-center">
               <p className="label-atelier">Piercing · Passo 2</p>
               <h2 className="mt-3 font-display text-3xl text-ink">
-                Orecchio sinistro
+                Orecchio
               </h2>
               <p className="mt-3 text-muted">
                 Seleziona il punto esatto sulla mappa.
               </p>
-              <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-line/60 bg-paper/45 px-3 py-2 backdrop-blur-sm">
-                <span className="relative h-10 w-10 overflow-hidden rounded-full border border-line/70">
-                  <Image
-                    src={model.face}
-                    alt=""
-                    fill
-                    className="object-cover object-[center_20%]"
-                    sizes="40px"
-                    unoptimized
-                  />
-                </span>
-                <span className="text-left text-xs text-muted">
-                  Stesso modello
-                  <span className="block text-ink">{model.label}</span>
-                </span>
+              <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                <div className="inline-flex items-center gap-3 border border-line-strong bg-paper/70 px-3 py-2">
+                  <span className="relative h-10 w-10 overflow-hidden border border-line-strong">
+                    <Image
+                      src={model.face}
+                      alt=""
+                      fill
+                      className="object-cover object-[center_20%]"
+                      sizes="40px"
+                      unoptimized
+                    />
+                  </span>
+                  <span className="text-xs text-muted">Stesso modello</span>
+                </div>
+                <ModelGenderToggle />
               </div>
             </div>
             <EarMap model={model} onSelect={handleEarSelect} />
@@ -533,7 +564,7 @@ export function CatalogClient({
                     href={`/catalogo/${product.slug}`}
                     className="group block"
                   >
-                    <div className="relative aspect-[4/5] overflow-hidden border border-line bg-paper-soft">
+                    <ToriiFrame variant="myojin" media>
                       {product.imageUrl ? (
                         <Image
                           src={product.imageUrl}
@@ -547,8 +578,12 @@ export function CatalogClient({
                           未来
                         </div>
                       )}
-                    </div>
-                    <div className="surface mt-3 space-y-1 border border-line/50 px-3 py-3">
+                    </ToriiFrame>
+                    <ToriiFrame
+                      variant="shinmei"
+                      className="mt-3"
+                      contentClassName="space-y-1 px-3 py-3"
+                    >
                       <p className="text-[10px] tracking-[0.2em] text-ink-soft uppercase">
                         {productCategoryLabel(product)}
                       </p>
@@ -559,7 +594,7 @@ export function CatalogClient({
                         {product.material ?? "Su richiesta"} ·{" "}
                         {statusLabel(product.status)}
                       </p>
-                    </div>
+                    </ToriiFrame>
                   </MotionLink>
                 ))}
               </div>
@@ -573,7 +608,10 @@ export function CatalogClient({
 
 function EmptyCatalog({ selection }: { selection: string }) {
   return (
-    <div className="surface border border-line/60 px-6 py-16 text-center">
+    <ToriiFrame
+      variant="myojin"
+      contentClassName="px-6 py-16 text-center"
+    >
       <p className="font-display text-2xl text-ink">Catalogo in arrivo</p>
       <p className="mx-auto mt-3 max-w-md text-muted">
         Al momento non ci sono pezzi pubblicati per{" "}
@@ -583,9 +621,9 @@ function EmptyCatalog({ selection }: { selection: string }) {
       <div className="mt-8 flex justify-center">
         <ContactActions />
       </div>
-      <MotionLink href="/prenota" className="btn-ghost mt-4">
-        Prenota una consulenza
+      <MotionLink href="/contatti" className="btn-ghost mt-4">
+        Contattaci
       </MotionLink>
-    </div>
+    </ToriiFrame>
   );
 }

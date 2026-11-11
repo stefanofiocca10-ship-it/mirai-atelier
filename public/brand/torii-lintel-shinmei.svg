@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 140" fill="none" aria-hidden="true">
+  <!--
+    Shinmei torii — linee rette, kasagi cilindrico parallelo al suolo, senza gakuzuka
+    Kasagi · Shimaki retto · Daiwa · Nuki · Hashira
+  -->
+  <defs>
+    <linearGradient id="wsV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9a8260"/>
+      <stop offset="35%" stop-color="#6f5c42"/>
+      <stop offset="100%" stop-color="#3f3226"/>
+    </linearGradient>
+    <linearGradient id="wsPillar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3f3226"/>
+      <stop offset="30%" stop-color="#a89472"/>
+      <stop offset="55%" stop-color="#6f5c42"/>
+      <stop offset="100%" stop-color="#3f3226"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hashira stubs -->
+  <rect x="52" y="58" width="36" height="82" fill="url(#wsPillar)"/>
+  <rect x="712" y="58" width="36" height="82" fill="url(#wsPillar)"/>
+
+  <!-- Daiwa -->
+  <ellipse cx="70" cy="58" rx="26" ry="9" fill="#5c4a34"/>
+  <ellipse cx="70" cy="54" rx="26" ry="8" fill="url(#wsV)"/>
+  <ellipse cx="730" cy="58" rx="26" ry="9" fill="#5c4a34"/>
+  <ellipse cx="730" cy="54" rx="26" ry="8" fill="url(#wsV)"/>
+
+  <!-- Nuki -->
+  <rect x="40" y="100" width="720" height="18" fill="url(#wsV)"/>
+  <rect x="40" y="100" width="720" height="5" fill="#a89472" fill-opacity="0.28"/>
+
+  <!-- Kusabi -->
+  <polygon points="52,98 66,98 60,90" fill="#3f3226"/>
+  <polygon points="88,98 74,98 80,90" fill="#3f3226"/>
+  <polygon points="712,98 726,98 720,90" fill="#3f3226"/>
+  <polygon points="748,98 734,98 740,90" fill="#3f3226"/>
+
+  <!-- Shimaki — retto, sotto il kasagi -->
+  <rect x="80" y="44" width="640" height="14" fill="url(#wsV)"/>
+
+  <!-- Kasagi — cilindrico, parallelo al suolo -->
+  <rect x="28" y="12" width="744" height="28" rx="14" fill="url(#wsV)"/>
+  <rect x="48" y="18" width="704" height="10" rx="5" fill="#a89472" fill-opacity="0.32"/>
+</svg>

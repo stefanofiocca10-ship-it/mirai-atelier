@@ -8,26 +8,29 @@ import { Logo } from "@/components/brand/Logo";
 
 const nav = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/inventario", label: "Inventario" },
   { href: "/admin/prodotti", label: "Prodotti" },
+  { href: "/admin/calendario", label: "Calendario" },
+  { href: "/admin/galleria", label: "Galleria" },
+  { href: "/admin/studio", label: "Studio" },
   { href: "/admin/categorie", label: "Categorie" },
-  { href: "/admin/prenotazioni", label: "Prenotazioni" },
 ] as const;
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
-      <header className="border-b border-line bg-paper-soft">
-        <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-h-screen bg-background text-ink">
+      <header className="border-b border-line bg-paper">
+        <div className="mx-auto flex max-w-5xl flex-col gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <Logo size="nav" href="/admin" />
-            <div>
+            <div className="min-w-0">
               <p className="label-atelier">Admin</p>
-              <p className="text-sm text-muted">Pannello atelier</p>
+              <p className="truncate text-sm text-muted">Pannello atelier</p>
             </div>
           </div>
-          <nav className="flex flex-wrap items-center gap-2">
+          <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden">
             {nav.map((item) => {
               const active =
                 item.href === "/admin"
@@ -38,10 +41,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-3 py-2 text-sm transition",
-                    active
-                      ? "bg-ink text-paper"
-                      : "text-muted hover:bg-paper-warm hover:text-ink"
+                    "btn-toggle btn-sm shrink-0",
+                    active && "is-active"
                   )}
                 >
                   {item.label}
@@ -51,14 +52,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/admin/login" })}
-              className="border border-line px-3 py-2 text-sm text-muted hover:text-ink"
+              className="btn-ghost btn-sm shrink-0"
             >
               Esci
             </button>
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-5xl px-3 py-6 sm:px-4 sm:py-8">{children}</main>
     </div>
   );
 }

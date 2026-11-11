@@ -12,7 +12,9 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/chi-siamo", label: "Chi siamo" },
   { href: "/catalogo", label: "Catalogo" },
-  { href: "/prenota", label: "Prenota" },
+  { href: "/calendario", label: "Calendario" },
+  { href: "/galleria", label: "Galleria" },
+  { href: "/faq", label: "FAQ" },
   { href: "/contatti", label: "Contatti" },
 ];
 
@@ -43,11 +45,11 @@ export function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-all duration-300",
         scrolled || open
-          ? "border-b border-line/50 bg-paper/45 backdrop-blur-md"
-          : "bg-transparent"
+          ? "border-b border-line/60 bg-paper/85 backdrop-blur-md"
+          : "border-b border-transparent bg-paper/70 backdrop-blur-md"
       )}
     >
-      <div className="mx-auto flex max-w-atelier items-center justify-between px-4 py-3 sm:px-6 md:px-8">
+      <div className="mx-auto flex max-w-atelier items-center justify-between px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 md:px-8">
         <Link
           href="/"
           className="text-[11px] tracking-[0.28em] text-ink uppercase"
@@ -55,14 +57,16 @@ export function Header() {
           {SITE.shortName}
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
+        <nav className="hidden items-center gap-5 xl:flex xl:gap-8">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "text-[11px] tracking-[0.22em] uppercase transition",
-                pathname === link.href ? "text-ink" : "text-muted hover:text-ink"
+                "text-[11px] tracking-[0.18em] uppercase transition xl:tracking-[0.22em]",
+                pathname === link.href
+                  ? "text-ink"
+                  : "text-ink-soft hover:text-ink"
               )}
             >
               {link.label}
@@ -72,7 +76,7 @@ export function Header() {
             href={CONTACT.instagram.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted transition hover:text-ink"
+            className="text-ink-soft transition hover:text-ink"
             aria-label="Instagram Mirai"
           >
             <Instagram className="h-4 w-4" />
@@ -81,7 +85,7 @@ export function Header() {
 
         <motion.button
           type="button"
-          className="flex h-11 w-11 items-center justify-center text-ink lg:hidden"
+          className="flex h-11 w-11 items-center justify-center text-ink xl:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Chiudi menu" : "Apri menu"}
           aria-expanded={open}
@@ -99,15 +103,15 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-line/60 bg-paper/55 backdrop-blur-md lg:hidden"
+            className="border-t border-line/60 bg-paper/95 backdrop-blur-md xl:hidden"
           >
-            <div className="flex max-h-[80dvh] flex-col gap-1 overflow-y-auto px-4 py-4">
+            <div className="flex max-h-[min(80dvh,calc(100svh-4.5rem))] flex-col gap-0.5 overflow-y-auto overscroll-contain px-4 py-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
               {links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "rounded-sm px-2 py-3 font-display text-2xl text-ink",
+                    "min-h-11 rounded-sm px-2 py-2.5 font-display text-xl text-ink sm:text-2xl",
                     pathname === link.href && "text-khaki-deep"
                   )}
                 >
@@ -118,7 +122,7 @@ export function Header() {
                 href={CONTACT.instagram.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 inline-flex items-center gap-2 px-2 py-3 text-muted"
+                className="mt-2 inline-flex min-h-11 items-center gap-2 px-2 py-2.5 text-muted"
               >
                 <Instagram className="h-4 w-4" />
                 Instagram studio

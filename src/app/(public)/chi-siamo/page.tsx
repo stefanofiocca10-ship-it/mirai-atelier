@@ -3,6 +3,7 @@ import { Instagram } from "lucide-react";
 import { SITE, CONTACT, ARTISTS } from "@/lib/constants";
 import { ContactActions } from "@/components/contact/ContactActions";
 import { Logo } from "@/components/brand/Logo";
+import { ToriiFrame } from "@/components/brand/ToriiFrame";
 import { MotionAnchor, MotionLink } from "@/components/ui/MotionPressable";
 
 export const metadata: Metadata = {
@@ -12,9 +13,12 @@ export const metadata: Metadata = {
 
 export default function ChiSiamoPage() {
   return (
-    <div className="min-h-[100svh] pt-24 pb-20 sm:pt-28">
+    <div className="min-h-[100svh] pt-20 pb-[max(5rem,env(safe-area-inset-bottom))] sm:pt-24">
       <article className="mx-auto max-w-3xl px-4 sm:px-6 md:px-8">
-        <div className="surface border border-line/80 p-5 sm:p-8 md:p-10">
+        <ToriiFrame
+          variant="myojin"
+          contentClassName="p-4 sm:p-8 md:p-10"
+        >
           <div className="mb-8">
             <Logo size="md" href={null} />
           </div>
@@ -54,25 +58,30 @@ export default function ChiSiamoPage() {
               o contattaci per una consulenza.
             </p>
           </div>
-        </div>
+        </ToriiFrame>
 
         <section className="mt-10 sm:mt-14">
-          <div className="mb-6 text-center sm:mb-8 sm:text-left">
+          <ToriiFrame
+            variant="shinmei"
+            className="mb-6 sm:mb-8"
+            contentClassName="px-5 py-6 text-center sm:px-8 sm:py-8 sm:text-left"
+          >
             <p className="label-atelier">Le artiste</p>
             <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl">
               Chi lavora con te
             </h2>
-            <p className="mt-3 text-sm text-muted sm:text-base">
+            <p className="mt-3 text-sm text-ink-soft sm:text-base">
               Due percorsi distinti, la stessa cura: piercing e tatuaggio sotto
               lo stesso tetto.
             </p>
-          </div>
+          </ToriiFrame>
 
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {ARTISTS.map((artist) => (
-              <div
+              <ToriiFrame
                 key={artist.id}
-                className="surface border border-line/80 p-5 sm:p-7"
+                variant="myojin"
+                contentClassName="p-5 sm:p-7"
               >
                 <p className="text-[11px] tracking-[0.22em] text-khaki-deep uppercase">
                   {artist.role}
@@ -87,19 +96,19 @@ export default function ChiSiamoPage() {
                   href={artist.instagram.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-6 inline-flex min-h-11 items-center gap-2 border border-line bg-paper/80 px-4 py-2.5 text-sm text-ink transition hover:border-khaki"
+                  className="btn-ghost mt-6"
                 >
-                  <Instagram className="h-4 w-4" />
+                  <Instagram className="h-4 w-4 shrink-0 text-khaki-deep" />
                   {artist.instagram.handle}
                 </MotionAnchor>
-              </div>
+              </ToriiFrame>
             ))}
           </div>
         </section>
 
         <div className="mt-10 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:flex-wrap">
-          <MotionLink href="/prenota" className="btn-primary w-full sm:w-auto">
-            Prenota una consulenza
+          <MotionLink href="/contatti" className="btn-primary w-full sm:w-auto">
+            Contattaci
           </MotionLink>
           <MotionLink href="/catalogo" className="btn-ghost w-full sm:w-auto">
             Apri il catalogo

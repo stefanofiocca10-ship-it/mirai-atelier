@@ -35,21 +35,21 @@ export function EarMap({ model, onSelect }: Props) {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      <p className="mb-4 text-center label-atelier">
-        Orecchio sinistro — {model.label}
-      </p>
+      <p className="mb-4 text-center label-atelier">Orecchio</p>
 
-      <div className="relative aspect-[3/4] overflow-hidden border border-line/50 bg-paper/15 shadow-soft backdrop-blur-[2px] touch-manipulation">
-        <Image
-          key={`ear-${model.id}`}
-          src={model.ear}
-          alt={`Mappa orecchio — ${model.label}`}
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="(max-width:768px) 100vw, 512px"
-          unoptimized
-        />
+      <div className="media-mirai relative aspect-[3/4] touch-manipulation">
+        <div className="media-mirai-inner">
+          <Image
+            key={`ear-${model.id}`}
+            src={model.ear}
+            alt="Mappa dell'orecchio per la scelta del piercing"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="(max-width:768px) 100vw, 512px"
+            unoptimized
+          />
+        </div>
 
         {EAR_ZONES.map((zone) => {
           const active = hovered === zone.id;
@@ -81,7 +81,7 @@ export function EarMap({ model, onSelect }: Props) {
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 border border-line/60 bg-paper/55 px-4 py-2 shadow-lift backdrop-blur-md"
+            className="surface absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2"
           >
             <p className="font-display text-sm text-ink">
               {EAR_ZONES.find((z) => z.id === hovered)?.label}
@@ -99,10 +99,8 @@ export function EarMap({ model, onSelect }: Props) {
             onMouseEnter={() => setHovered(zone.id)}
             onMouseLeave={() => setHovered(null)}
             className={cn(
-              "border px-2 py-2 text-[11px] backdrop-blur-sm transition",
-              hovered === zone.id
-                ? "border-khaki bg-khaki/20 text-ink"
-                : "border-line/70 bg-paper/35 text-muted hover:border-khaki/50 hover:bg-paper/50 hover:text-ink"
+              "btn-chip w-full text-[11px]",
+              hovered === zone.id && "is-active"
             )}
           >
             {zone.label}

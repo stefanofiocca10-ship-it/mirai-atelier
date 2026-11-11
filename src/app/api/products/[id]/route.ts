@@ -29,15 +29,19 @@ const updateSchema = z.object({
   description: z.string().nullable().optional(),
   material: z.string().nullable().optional(),
   status: z.enum(productStatusEnum).optional(),
+  quantity: z.number().int().min(0).optional(),
   categoryIds: z.array(z.string().min(1)).min(1).optional(),
   featured: z.boolean().optional(),
+  sortOrder: z.number().int().optional(),
   imageUrl: imageUrlField,
+  imageUrls: z.array(z.string().min(1)).optional(),
 });
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 const productInclude = {
   categories: { include: { category: true } },
+  images: { orderBy: { sortOrder: "asc" as const } },
 } as const;
 
 async function ensureUniqueProductSlugExcluding(
@@ -121,12 +125,14 @@ export async function PUT(request: Request, context: RouteContext) {
     nextSlug = await ensureUniqueProductSlugExcluding(base, id);
   }
 
-  const imageUrlResolved =
-    data.imageUrl === undefined
-      ? undefined
-      : data.imageUrl === "" || data.imageUrl === null
-        ? null
-        : data.imageUrl;
+  const urls =
+    data.imageUrls !== undefined
+      ? data.imageUrls
+      : data.imageUrl !== undefined
+        ? data.imageUrl
+          ? [data.imageUrl]
+          : []
+        : undefined;
 
   const updated = await prisma.$transaction(async (tx) => {
     if (data.categoryIds) {
@@ -139,6 +145,19 @@ export async function PUT(request: Request, context: RouteContext) {
       });
     }
 
+    if (urls !== undefined) {
+      await tx.productImage.deleteMany({ where: { productId: id } });
+      if (urls.length) {
+        await tx.productImage.createMany({
+          data: urls.map((imageUrl, sortOrder) => ({
+            productId: id,
+            imageUrl,
+            sortOrder,
+          })),
+        });
+      }
+    }
+
     return tx.product.update({
       where: { id },
       data: {
@@ -148,8 +167,10 @@ export async function PUT(request: Request, context: RouteContext) {
           data.description === undefined ? undefined : data.description,
         material: data.material === undefined ? undefined : data.material,
         status: data.status ?? undefined,
+        quantity: data.quantity,
         featured: data.featured ?? undefined,
-        imageUrl: imageUrlResolved,
+        sortOrder: data.sortOrder,
+        imageUrl: urls !== undefined ? urls[0] ?? null : undefined,
       },
       include: productInclude,
     });

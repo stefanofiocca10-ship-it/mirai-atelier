@@ -194,7 +194,7 @@ export function FontPreview() {
               </div>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {["Prenota", "Catalogo", "Contatti"].map((label) => (
+                {["Contatti", "Catalogo", "Chi siamo"].map((label) => (
                   <div
                     key={label}
                     className="border border-line px-4 py-3 text-center text-sm tracking-wide"

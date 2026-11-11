@@ -20,7 +20,7 @@ export function DeleteProductButton({ id }: { id: string }) {
       type="button"
       onClick={onDelete}
       disabled={loading}
-      className="text-muted hover:text-ink disabled:opacity-50"
+      className="btn-ghost btn-sm"
     >
       {loading ? "…" : "Elimina"}
     </button>

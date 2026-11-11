@@ -2,21 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   STILE MIRAI — design system unico (sito pubblico + admin)
+   Cornici torii, palette carta/ink/khaki, bottoni e campi condivisi.
+   ========================================================================== */
+
 :root {
+  /* Carta */
   --paper: #ffffff;
   --paper-soft: #f6f4f0;
   --paper-warm: #efebe4;
+  --background: #f4f1eb;
+
+  /* Inchiostro */
   --ink: #111111;
   --ink-soft: #2a2a2a;
-  --muted: #4f4a45;
-  --muted-soft: #6f6963;
+  --muted: #3f3a36;
+  --muted-soft: #5c5650;
+
+  /* Linee */
   --line: #e6e1d8;
   --line-strong: #d4cfc5;
-  --khaki: #b8a686;
-  --khaki-deep: #8a7356;
+
+  /* Accento atelier (khaki) */
+  --khaki: #a89472;
+  --khaki-deep: #6f5c42;
   --khaki-soft: #e9e2d4;
-  --background: #f4f1eb;
+
   --foreground: var(--ink);
+
+  /* Torii — legno; Myōjin (default) e Shinmei */
+  --mirai-wood: #6f5c42;
+  --mirai-wood-deep: #4f4030;
+  --mirai-wood-soft: #a89472;
+  /* Larghezza hashira allineata agli SVG lintel (26/800 = 3.25%) */
+  --mirai-hashira-w: 3.25%;
+  --mirai-control: 0.55rem;
+
+  /* Alias legacy — non introdurre nuovi usi */
   --cream: var(--ink);
   --charcoal: var(--paper-soft);
   --stone: var(--muted-soft);
@@ -30,6 +53,8 @@ html {
   scroll-behavior: smooth;
   background: var(--background);
   overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -40,24 +65,29 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   overscroll-behavior-y: none;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+img,
+video,
+svg,
+iframe {
+  max-width: 100%;
+}
+
+/* Evita zoom involontario su iOS nei campi form */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }
 
 ::selection {
   background: color-mix(in srgb, var(--khaki) 45%, white);
   color: var(--ink);
-}
-
-/* Surface panels that sit above atmosphere — glass, più leggibile */
-.surface {
-  background: color-mix(in srgb, var(--paper) 68%, transparent);
-  backdrop-filter: blur(14px) saturate(1.04);
-  -webkit-backdrop-filter: blur(14px) saturate(1.04);
-}
-
-.surface-solid {
-  background: color-mix(in srgb, var(--paper) 80%, transparent);
-  backdrop-filter: blur(16px) saturate(1.04);
-  -webkit-backdrop-filter: blur(16px) saturate(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -71,6 +101,7 @@ body {
 }
 
 @layer components {
+  /* —— Tipografia di sistema —— */
   .label-atelier {
     font-size: 11px;
     font-weight: 500;
@@ -79,23 +110,233 @@ body {
     color: var(--khaki-deep);
   }
 
-  .btn-primary {
+  /* —— Portale torii (ToriiFrame) — anatomia completa ——
+     Kasagi · Shimaki · Daiwa · Gakuzuka · Kusabi · Nuki · Hashira · Nemaki/Daiishi */
+  .torii {
+    --hashira-w: var(--mirai-hashira-w);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .torii-lintel {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    margin-bottom: -2px;
+    line-height: 0;
+    pointer-events: none;
+  }
+
+  .torii-lintel__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+  }
+
+  .torii-body {
+    display: grid;
+    grid-template-columns: var(--hashira-w) minmax(0, 1fr) var(--hashira-w);
+    align-items: stretch;
+    min-height: 0;
+    padding-bottom: 0.9rem; /* spazio per le basi a gradoni */
+  }
+
+  /* Hashira (柱) — flat: luce + lato in ombra + contorno, come il lintel */
+  .torii-hashira {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 4.5rem;
+    background: linear-gradient(90deg, #8c7656 0 62%, #5a4834 62% 100%);
+    box-shadow: inset 0 0 0 1.2px #2b2118;
+  }
+
+  /* Base a gradoni (nemaki + daiishi) — flat, contornata */
+  .torii-base {
+    position: absolute;
+    left: -14%;
+    right: -14%;
+    bottom: -0.9rem;
+    height: 0.9rem;
+    background: #5a4834;
+    box-shadow: inset 0 0 0 1.2px #2b2118;
+  }
+
+  .torii-base::before {
+    /* gradino superiore (nemaki) */
+    content: "";
+    position: absolute;
+    left: 7%;
+    right: 7%;
+    top: -0.38rem;
+    height: 0.4rem;
+    background: #8c7656;
+    box-shadow: inset 0 0 0 1.2px #2b2118;
+  }
+
+  .torii-base::after {
+    /* gradino inferiore (daiishi), più largo */
+    content: "";
+    position: absolute;
+    left: -16%;
+    right: -16%;
+    bottom: -0.32rem;
+    height: 0.34rem;
+    background: #3f3226;
+    box-shadow: inset 0 0 0 1.2px #2b2118;
+  }
+
+  /* Interattivi (card link / bottone dentro al torii) */
+  a > .torii,
+  .torii:has(> .torii-body > .torii-opening > button) {
+    transition: transform 0.3s ease;
+  }
+
+  a:hover > .torii,
+  .torii:has(> .torii-body > .torii-opening > button:hover) {
+    transform: translateY(-2px);
+  }
+
+  /* Vano tra i pilastri — carta leggibile, ombra del nuki in alto */
+  .torii-opening {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    backdrop-filter: blur(18px) saturate(1.04);
+    -webkit-backdrop-filter: blur(18px) saturate(1.04);
+    box-shadow:
+      inset 0 0 0 1.2px color-mix(in srgb, #2b2118 55%, transparent),
+      0 16px 36px color-mix(in srgb, var(--ink) 4%, transparent);
+    padding: 1rem 0.9rem 1.15rem;
+  }
+
+  @media (min-width: 640px) {
+    .torii-opening {
+      padding: 1.25rem 1.35rem 1.5rem;
+    }
+  }
+
+  .torii--media .torii-opening {
+    box-shadow: inset 0 0 0 1.2px color-mix(in srgb, #2b2118 55%, transparent);
+  }
+
+  .torii--shinmei {
+    --hashira-w: 3%;
+  }
+
+  .torii--shinmei .torii-opening {
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+  }
+
+  /* Shinmei: base semplice, senza gradoni decorativi */
+  .torii--shinmei .torii-base::before {
+    display: none;
+  }
+
+  .torii--media .torii-opening {
+    padding: 0;
+    background: var(--paper-soft);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .torii--media .torii-opening--media {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Alias Stile Mirai → usati come contentClassName su ToriiFrame */
+  .surface,
+  .surface-alt,
+  .surface-solid,
+  .panel-mirai {
+    /* no-op wrappers se qualcuno lascia la sola classe: fallback carta */
+  }
+
+  .panel-mirai.torii-opening,
+  .torii-opening.panel-mirai {
+    background: var(--paper);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: var(--ink);
+  }
+
+  .surface-solid.torii-opening,
+  .torii-opening.surface-solid {
+    background: color-mix(in srgb, var(--paper) 96%, transparent);
+  }
+
+  /* Compat: vecchie classi surface stand-alone → carta semplice (preferire ToriiFrame) */
+  .surface:not(.torii-opening),
+  .surface-alt:not(.torii-opening),
+  .surface-solid:not(.torii-opening),
+  .panel-mirai:not(.torii):not(.torii-opening) {
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 18px 40px color-mix(in srgb, var(--ink) 5%, transparent);
+  }
+
+  /* Sotto-pannelli interni admin (gruppi categorie, anteprima foto) */
+  .panel-mirai:not(.torii):not(.torii-opening) {
+    background: var(--paper-soft);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .media-mirai {
+    /* preferire <ToriiFrame media> */
+  }
+
+  .media-mirai-inner {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* —— Bottoni: metriche condivise —— */
+  .btn-primary,
+  .btn-ghost,
+  .btn-chip,
+  .btn-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--ink);
-    color: var(--paper);
+    gap: 0.5rem;
+    min-height: 44px;
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
+    font-weight: 500;
     letter-spacing: 0.04em;
-    min-height: 44px;
-    position: relative;
-    overflow: hidden;
+    line-height: 1.2;
+    text-align: center;
+    border-radius: var(--mirai-control);
     will-change: transform;
     transition:
       background 0.25s ease,
+      border-color 0.25s ease,
+      color 0.25s ease,
       box-shadow 0.25s ease,
-      color 0.25s ease;
+      opacity 0.2s ease;
+  }
+
+  .btn-primary:disabled,
+  .btn-ghost:disabled,
+  .btn-chip:disabled,
+  .btn-toggle:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
   }
 
   .btn-primary::after {
@@ -113,51 +354,90 @@ body {
     pointer-events: none;
   }
 
-  .btn-primary:hover {
+  .btn-primary:hover:not(:disabled) {
     background: var(--ink-soft);
+    border-color: var(--ink-soft);
     box-shadow: 0 10px 28px color-mix(in srgb, var(--ink) 18%, transparent);
   }
 
-  .btn-primary:hover::after {
+  .btn-primary:hover:not(:disabled)::after {
     transform: translateX(120%);
   }
 
-  .btn-primary:active {
+  .btn-primary:active:not(:disabled) {
     box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 12%, transparent);
   }
 
   .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-    background: color-mix(in srgb, var(--paper) 42%, transparent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
     color: var(--ink);
-    padding: 0.75rem 1.5rem;
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
-    min-height: 44px;
-    will-change: transform;
-    transition:
-      border-color 0.25s ease,
-      color 0.25s ease,
-      background 0.25s ease,
-      box-shadow 0.25s ease;
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 4%, transparent);
   }
 
-  .btn-ghost:hover {
-    border-color: var(--khaki);
-    color: var(--khaki-deep);
-    background: color-mix(in srgb, var(--khaki-soft) 55%, transparent);
+  .btn-ghost:hover:not(:disabled) {
+    border-color: var(--khaki-deep);
+    color: var(--ink);
+    background: var(--khaki-soft);
     box-shadow: 0 8px 22px color-mix(in srgb, var(--khaki) 22%, transparent);
   }
 
-  .btn-ghost:active {
+  .btn-ghost:active:not(:disabled) {
     box-shadow: 0 3px 10px color-mix(in srgb, var(--khaki) 16%, transparent);
   }
 
+  .btn-chip {
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--ink);
+    padding: 0.625rem 0.75rem;
+    min-height: 40px;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 4%, transparent);
+  }
+
+  .btn-chip:hover:not(:disabled),
+  .btn-chip.is-active {
+    border-color: var(--khaki-deep);
+    background: var(--khaki-soft);
+    color: var(--ink);
+  }
+
+  .btn-toggle {
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--muted);
+    padding: 0.625rem 1rem;
+    min-height: 40px;
+  }
+
+  .btn-toggle:hover:not(:disabled) {
+    border-color: var(--khaki-deep);
+    color: var(--ink);
+    background: var(--khaki-soft);
+  }
+
+  .btn-toggle.is-active {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn-toggle.is-active:hover:not(:disabled) {
+    background: var(--ink-soft);
+    border-color: var(--ink-soft);
+    color: var(--paper);
+  }
+
+  .btn-sm {
+    min-height: 36px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* —— Campi form —— */
   .field-atelier {
     width: 100%;
     border: 1px solid var(--line);
@@ -166,6 +446,7 @@ body {
     font-size: 0.875rem;
     color: var(--ink);
     min-height: 44px;
+    border-radius: var(--mirai-control);
   }
 
   .field-atelier::placeholder {
@@ -175,6 +456,11 @@ body {
   .field-atelier:focus {
     outline: none;
     border-color: var(--khaki);
+  }
+
+  .field-atelier:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .divider-atelier {

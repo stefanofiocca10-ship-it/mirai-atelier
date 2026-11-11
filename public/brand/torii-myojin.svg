@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320" fill="none" preserveAspectRatio="none" aria-hidden="true">
+  <!--
+    My?jin torii a portale intero (si stiracchia in altezza).
+    Kasagi curvo · Gakuzuka · Nuki che attraversa · Hashira a tutta altezza.
+    Il vano centrale è trasparente ? si vede la carta sotto.
+  -->
+
+  <!-- Hashira sinistro (?) -->
+  <rect x="18" y="52" width="14" height="268" fill="#6f5c42"/>
+  <rect x="20" y="52" width="4" height="268" fill="#a89472" fill-opacity="0.35"/>
+
+  <!-- Hashira destro (?) -->
+  <rect x="168" y="52" width="14" height="268" fill="#6f5c42"/>
+  <rect x="176" y="52" width="4" height="268" fill="#a89472" fill-opacity="0.35"/>
+
+  <!-- Nuki (?) — attraversa i pilastri -->
+  <rect x="12" y="58" width="176" height="9" fill="#5c4a34"/>
+  <rect x="12" y="58" width="176" height="3" fill="#a89472" fill-opacity="0.25"/>
+
+  <!-- Gakuzuka (??) — tra kasagi e nuki -->
+  <rect x="90" y="36" width="20" height="22" fill="#6f5c42"/>
+  <rect x="93" y="40" width="14" height="14" fill="#efebe4" fill-opacity="0.45"/>
+
+  <!-- Kasagi (??) — curvo alle estremità, sporge oltre gli hashira -->
+  <path
+    d="M4 42
+       C 14 10, 36 4, 52 4
+       H 148
+       C 164 4, 186 10, 196 42
+       L 186 46
+       C 174 22, 160 18, 148 18
+       H 52
+       C 40 18, 26 22, 14 46
+       Z"
+    fill="#6f5c42"
+  />
+  <!-- Profilo inferiore del kasagi -->
+  <path
+    d="M16 42
+       C 28 26, 42 22, 52 22
+       H 148
+       C 158 22, 172 26, 184 42
+       V 45 H 16 Z"
+    fill="#5c4a34"
+  />
+</svg>

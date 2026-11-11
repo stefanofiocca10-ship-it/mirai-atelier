@@ -40,6 +40,9 @@ prisma/*.db-journal
 public/uploads/*
 !public/uploads/.gitkeep
 
+# local audit / temp
+/tmp/
+
 # vercel
 .vercel
 

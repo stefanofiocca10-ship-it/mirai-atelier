@@ -63,12 +63,18 @@ export function MotionLink({ children, className, ...props }: MotionLinkProps) {
   const full = typeof className === "string" && className.includes("w-full");
   return (
     <motion.span
-      className={cn("inline-flex", full && "w-full")}
+      className={cn(
+        "inline-flex justify-center",
+        full && "flex w-full"
+      )}
       whileHover={press.whileHover}
       whileTap={press.whileTap}
       transition={press.transition}
     >
-      <Link className={cn(className)} {...props}>
+      <Link
+        className={cn(full && "flex w-full justify-center", className)}
+        {...props}
+      >
         {children}
       </Link>
     </motion.span>

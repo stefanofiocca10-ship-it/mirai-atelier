@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { ToriiFrame } from "@/components/brand/ToriiFrame";
 import { prisma } from "@/lib/prisma";
 import { BOOKING_STATUSES, SERVICE_TYPES } from "@/lib/constants";
 import { statusLabel } from "@/lib/utils";
@@ -25,17 +26,22 @@ export default async function AdminPrenotazioniPage() {
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {bookings.length === 0 ? (
-          <p className="rounded-xl border border-line bg-paper px-4 py-8 text-center text-muted">
+          <ToriiFrame
+            variant="shinmei"
+            contentClassName="panel-mirai px-4 py-8 text-center text-muted"
+          >
             Nessuna prenotazione per ora.
-          </p>
+          </ToriiFrame>
         ) : (
           bookings.map((b) => (
-            <article
+            <ToriiFrame
               key={b.id}
-              className="rounded-xl border border-line bg-paper p-5"
+              variant="shinmei"
+              contentClassName="panel-mirai p-5"
             >
+            <article>
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-2">
                   <p className="font-display text-lg text-ink">{b.name}</p>
@@ -69,7 +75,7 @@ export default async function AdminPrenotazioniPage() {
                     </p>
                   ) : null}
                   {b.message ? (
-                    <p className="mt-2 rounded-md bg-paper-soft p-3 text-sm text-muted">
+                    <p className="mt-2 bg-paper-soft p-3 text-sm text-muted">
                       {b.message}
                     </p>
                   ) : null}
@@ -87,7 +93,7 @@ export default async function AdminPrenotazioniPage() {
                     <input type="hidden" name="id" value={b.id} />
                     <label
                       htmlFor={`status-${b.id}`}
-                      className="text-xs uppercase tracking-wider text-muted"
+                      className="label-atelier"
                     >
                       Stato
                     </label>
@@ -95,7 +101,7 @@ export default async function AdminPrenotazioniPage() {
                       id={`status-${b.id}`}
                       name="status"
                       defaultValue={b.status}
-                      className="rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink outline-none ring-khaki-deep focus:ring-2"
+                      className="field-atelier"
                     >
                       {BOOKING_STATUSES.map((s) => (
                         <option key={s.value} value={s.value}>
@@ -103,10 +109,7 @@ export default async function AdminPrenotazioniPage() {
                         </option>
                       ))}
                     </select>
-                    <button
-                      type="submit"
-                      className="rounded-md bg-ink py-2 text-sm font-medium text-paper transition-colors hover:bg-ink-soft"
-                    >
+                    <button type="submit" className="btn-primary">
                       Aggiorna stato
                     </button>
                   </form>
@@ -116,6 +119,7 @@ export default async function AdminPrenotazioniPage() {
                 </div>
               </div>
             </article>
+            </ToriiFrame>
           ))
         )}
       </div>

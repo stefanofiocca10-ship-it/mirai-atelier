@@ -12,7 +12,10 @@ export default async function ModificaProdottoPage({ params }: PageProps) {
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
-      include: { categories: { include: { category: true } } },
+      include: {
+        categories: { include: { category: true } },
+        images: { orderBy: { sortOrder: "asc" } },
+      },
     }),
     prisma.category.findMany({
       orderBy: [{ kind: "asc" }, { zone: "asc" }, { sortOrder: "asc" }],

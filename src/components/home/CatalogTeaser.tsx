@@ -32,10 +32,7 @@ export function CatalogTeaser({ products }: { products: ProductCard[] }) {
               contattaci o prenota una consulenza.
             </p>
           </div>
-          <Link
-            href="/catalogo"
-            className="border border-ink/20 px-5 py-2.5 text-xs tracking-[0.2em] text-ink uppercase transition hover:border-khaki hover:text-khaki-deep"
-          >
+          <Link href="/catalogo" className="btn-ghost">
             Vedi tutto
           </Link>
         </div>
@@ -50,20 +47,22 @@ export function CatalogTeaser({ products }: { products: ProductCard[] }) {
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
               <Link href={`/catalogo/${product.slug}`} className="group block">
-                <div className="relative aspect-[4/5] overflow-hidden border border-line bg-paper-soft">
-                  {product.imageUrl ? (
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.title}
-                      fill
-                      className="object-cover transition duration-700 group-hover:scale-105"
-                      sizes="(max-width:768px) 100vw, 33vw"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center font-display text-5xl text-ink/10">
-                      未来
-                    </div>
-                  )}
+                <div className="media-mirai relative aspect-[4/5]">
+                  <div className="media-mirai-inner">
+                    {product.imageUrl ? (
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.title}
+                        fill
+                        className="object-cover transition duration-700 group-hover:scale-105"
+                        sizes="(max-width:768px) 100vw, 33vw"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center font-display text-5xl text-ink/10">
+                        未来
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="mt-4 space-y-1">
                   <p className="text-[11px] tracking-[0.2em] text-muted-soft uppercase">

@@ -1,15 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Camera, ImageIcon, Upload } from "lucide-react";
 import type { Category, Product } from "@prisma/client";
 import { CATALOG_KINDS, PRODUCT_STATUSES, type CatalogKind } from "@/lib/constants";
 import { isAssignableCategory } from "@/lib/categories";
 import { cn } from "@/lib/utils";
+import { ToriiFrame } from "@/components/brand/ToriiFrame";
 
 type ProductWithCategories = Product & {
   categories?: { categoryId: string; category?: Category }[];
+  images?: { imageUrl: string; sortOrder: number }[];
 };
 
 type Props = {
@@ -18,8 +21,15 @@ type Props = {
   product?: ProductWithCategories;
 };
 
-const fieldClass =
-  "w-full rounded-md border border-line bg-paper px-3 py-2 text-ink outline-none ring-khaki-deep placeholder:text-muted-soft focus:ring-2";
+function initialImageList(product?: ProductWithCategories) {
+  const fromRelation = (product?.images ?? [])
+    .slice()
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((i) => i.imageUrl);
+  if (fromRelation.length) return fromRelation;
+  if (product?.imageUrl) return [product.imageUrl];
+  return [] as string[];
+}
 
 export function ProductForm({ categories, mode, product }: Props) {
   const router = useRouter();
@@ -34,10 +44,13 @@ export function ProductForm({ categories, mode, product }: Props) {
   const [description, setDescription] = useState(product?.description ?? "");
   const [material, setMaterial] = useState(product?.material ?? "");
   const [status, setStatus] = useState(product?.status ?? "DISPONIBILE");
+  const [quantity, setQuantity] = useState(product?.quantity ?? 0);
   const [kind, setKind] = useState<CatalogKind>(initialKind);
   const [categoryIds, setCategoryIds] = useState<string[]>(initialIds);
   const [featured, setFeatured] = useState(product?.featured ?? false);
-  const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? "");
+  const [imageUrls, setImageUrls] = useState<string[]>(() =>
+    initialImageList(product)
+  );
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +58,8 @@ export function ProductForm({ categories, mode, product }: Props) {
   const [newLeafZone, setNewLeafZone] = useState("");
   const [creatingLeaf, setCreatingLeaf] = useState(false);
   const [localCategories, setLocalCategories] = useState(categories);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const zones = useMemo(() => {
     const map = new Map<string, { zone: string; label: string }>();
@@ -102,7 +117,7 @@ export function ProductForm({ categories, mode, product }: Props) {
         setError(data.error ?? "Caricamento non riuscito.");
         return;
       }
-      if (data.url) setImageUrl(data.url);
+      if (data.url) setImageUrls((prev) => [...prev, data.url!]);
     } catch {
       setError("Errore di rete durante il caricamento.");
     } finally {
@@ -152,9 +167,11 @@ export function ProductForm({ categories, mode, product }: Props) {
         description: description.trim() || null,
         material: material.trim() || null,
         status,
+        quantity: Number.isFinite(quantity) ? Math.max(0, Math.floor(quantity)) : 0,
         categoryIds,
         featured,
-        imageUrl: imageUrl.trim() || null,
+        imageUrls,
+        imageUrl: imageUrls[0] ?? null,
       };
 
       if (!payload.title) {
@@ -202,15 +219,14 @@ export function ProductForm({ categories, mode, product }: Props) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-2xl space-y-6 rounded-xl border border-line bg-paper p-6"
+    <ToriiFrame
+      variant="myojin"
+      className="max-w-2xl"
+      contentClassName="panel-mirai p-6"
     >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label
-          htmlFor="title"
-          className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted"
-        >
+        <label htmlFor="title" className="label-atelier mb-2 block">
           Titolo
         </label>
         <input
@@ -218,15 +234,12 @@ export function ProductForm({ categories, mode, product }: Props) {
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className={fieldClass}
+          className="field-atelier"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="description"
-          className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted"
-        >
+        <label htmlFor="description" className="label-atelier mb-2 block">
           Descrizione
         </label>
         <textarea
@@ -234,37 +247,31 @@ export function ProductForm({ categories, mode, product }: Props) {
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className={fieldClass}
+          className="field-atelier min-h-[7rem] py-3"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="material"
-          className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted"
-        >
+        <label htmlFor="material" className="label-atelier mb-2 block">
           Materiale
         </label>
         <input
           id="material"
           value={material}
           onChange={(e) => setMaterial(e.target.value)}
-          className={fieldClass}
+          className="field-atelier"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="status"
-          className="mb-1 block text-xs font-medium uppercase tracking-wider text-muted"
-        >
+        <label htmlFor="status" className="label-atelier mb-2 block">
           Stato inventario / vetrina
         </label>
         <select
           id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className={fieldClass}
+          className="field-atelier"
         >
           {PRODUCT_STATUSES.map((s) => (
             <option key={s.value} value={s.value}>
@@ -275,21 +282,14 @@ export function ProductForm({ categories, mode, product }: Props) {
       </div>
 
       <fieldset>
-        <legend className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
-          1 · Tipo catalogo
-        </legend>
+        <legend className="label-atelier mb-3">1 · Tipo catalogo</legend>
         <div className="flex flex-wrap gap-2">
           {CATALOG_KINDS.map((k) => (
             <button
               key={k.value}
               type="button"
               onClick={() => switchKind(k.value)}
-              className={cn(
-                "rounded-md border px-4 py-2 text-sm transition",
-                kind === k.value
-                  ? "border-ink bg-ink text-paper"
-                  : "border-line text-muted hover:text-ink"
-              )}
+              className={cn("btn-toggle", kind === k.value && "is-active")}
             >
               {k.label}
             </button>
@@ -298,7 +298,7 @@ export function ProductForm({ categories, mode, product }: Props) {
       </fieldset>
 
       <fieldset>
-        <legend className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
+        <legend className="label-atelier mb-3">
           2 · Categorie (anche più di una)
         </legend>
         <p className="mb-3 text-xs text-muted">
@@ -310,7 +310,7 @@ export function ProductForm({ categories, mode, product }: Props) {
             const leaves = assignableByZone.get(z.zone) ?? [];
             if (!leaves.length) return null;
             return (
-              <div key={z.zone} className="rounded-md border border-line p-3">
+              <div key={z.zone} className="panel-mirai p-3">
                 <p className="text-sm font-medium text-ink">{z.label}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {leaves.map((leaf) => {
@@ -319,10 +319,8 @@ export function ProductForm({ categories, mode, product }: Props) {
                       <label
                         key={leaf.id}
                         className={cn(
-                          "cursor-pointer rounded-md border px-3 py-1.5 text-xs transition",
-                          checked
-                            ? "border-khaki-deep bg-khaki-soft text-ink"
-                            : "border-line text-muted hover:border-khaki-deep"
+                          "btn-chip cursor-pointer",
+                          checked && "is-active"
                         )}
                       >
                         <input
@@ -343,15 +341,13 @@ export function ProductForm({ categories, mode, product }: Props) {
       </fieldset>
 
       {kind === "PIERCING" ? (
-        <div className="rounded-md border border-dashed border-line p-3">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted">
-            Nuova sottocategoria
-          </p>
+        <div className="panel-mirai p-3">
+          <p className="label-atelier">Nuova sottocategoria</p>
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             <select
               value={newLeafZone || zones[0]?.zone || ""}
               onChange={(e) => setNewLeafZone(e.target.value)}
-              className="rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink outline-none ring-khaki-deep focus:ring-2"
+              className="field-atelier"
             >
               {zones.map((z) => (
                 <option key={z.zone} value={z.zone}>
@@ -363,19 +359,37 @@ export function ProductForm({ categories, mode, product }: Props) {
               value={newLeafName}
               onChange={(e) => setNewLeafName(e.target.value)}
               placeholder="Es. Rook alto"
-              className="flex-1 rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink placeholder:text-muted-soft outline-none ring-khaki-deep focus:ring-2"
+              className="field-atelier flex-1"
             />
             <button
               type="button"
               onClick={createLeaf}
               disabled={creatingLeaf}
-              className="rounded-md border border-khaki-deep px-3 py-2 text-sm text-khaki-deep hover:bg-khaki-soft disabled:opacity-60"
+              className="btn-ghost"
             >
               {creatingLeaf ? "…" : "Aggiungi"}
             </button>
           </div>
         </div>
       ) : null}
+
+      <div>
+        <label htmlFor="quantity" className="label-atelier mb-2 block">
+          Quantità in atelier
+        </label>
+        <input
+          id="quantity"
+          type="number"
+          min={0}
+          step={1}
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          className="field-atelier max-w-[10rem]"
+        />
+        <p className="mt-2 text-xs text-muted">
+          Pezzi fisici disponibili (0 = da aggiornare / non tracciato).
+        </p>
+      </div>
 
       <label className="flex cursor-pointer items-center gap-3">
         <input
@@ -388,38 +402,116 @@ export function ProductForm({ categories, mode, product }: Props) {
       </label>
 
       <div>
-        <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted">
-          Immagine
+        <p className="label-atelier mb-2">Foto prodotto</p>
+        <p className="mb-3 text-xs text-muted">
+          Puoi caricarne più di una: la prima è la cover del catalogo; sul sito
+          pubblico si naviga tra tutte.
         </p>
+
         <input
+          ref={cameraInputRef}
           type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          onChange={handleFileChange}
+          accept="image/*"
+          capture="environment"
+          className="sr-only"
+          tabIndex={-1}
           disabled={uploading}
-          className="block w-full text-sm text-muted file:mr-3 file:rounded-md file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-medium file:text-paper hover:file:bg-ink-soft"
+          onChange={handleFileChange}
         />
+        <input
+          ref={galleryInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif,image/*"
+          className="sr-only"
+          tabIndex={-1}
+          disabled={uploading}
+          onChange={handleFileChange}
+        />
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => cameraInputRef.current?.click()}
+            className="btn-ghost"
+          >
+            <Camera className="h-4 w-4 text-khaki-deep" />
+            Scatta foto
+          </button>
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => galleryInputRef.current?.click()}
+            className="btn-ghost sm:hidden"
+          >
+            <ImageIcon className="h-4 w-4 text-khaki-deep" />
+            Dalla galleria
+          </button>
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => galleryInputRef.current?.click()}
+            className="btn-primary"
+          >
+            <Upload className="h-4 w-4" />
+            <span className="sm:hidden">Aggiungi foto</span>
+            <span className="hidden sm:inline">Aggiungi dal computer</span>
+          </button>
+        </div>
+
         {uploading ? (
-          <p className="mt-2 text-xs text-khaki-deep">Caricamento…</p>
+          <p className="mt-2 text-xs text-khaki-deep">
+            Caricamento e ottimizzazione…
+          </p>
         ) : null}
-        {imageUrl ? (
-          <div className="mt-4 space-y-2">
-            <div className="relative h-48 w-full overflow-hidden rounded-md border border-line bg-paper-soft">
-              <Image
-                src={imageUrl}
-                alt="Anteprima"
-                fill
-                className="object-contain"
-                sizes="(max-width: 640px) 100vw, 42rem"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => setImageUrl("")}
-              className="text-xs text-muted underline hover:text-ink"
-            >
-              Rimuovi immagine
-            </button>
-          </div>
+
+        {imageUrls.length ? (
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {imageUrls.map((url, i) => (
+              <li key={url + i} className="space-y-2">
+                <div className="panel-mirai relative h-36 w-full overflow-hidden bg-paper-soft">
+                  <Image
+                    src={url}
+                    alt={`Foto ${i + 1}`}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 640px) 100vw, 20rem"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {i === 0 ? (
+                    <span className="text-[10px] uppercase tracking-wider text-khaki-deep">
+                      Cover
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn-ghost btn-sm"
+                      onClick={() =>
+                        setImageUrls((prev) => {
+                          const next = [...prev];
+                          const [item] = next.splice(i, 1);
+                          next.unshift(item);
+                          return next;
+                        })
+                      }
+                    >
+                      Imposta cover
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="btn-ghost btn-sm"
+                    onClick={() =>
+                      setImageUrls((prev) => prev.filter((_, j) => j !== i))
+                    }
+                  >
+                    Rimuovi
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : null}
       </div>
 
@@ -433,10 +525,7 @@ export function ProductForm({ categories, mode, product }: Props) {
         <button
           type="submit"
           disabled={saving || uploading}
-          className={cn(
-            "rounded-md bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition-colors",
-            "hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-60"
-          )}
+          className="btn-primary"
         >
           {saving
             ? "Salvataggio…"
@@ -446,5 +535,6 @@ export function ProductForm({ categories, mode, product }: Props) {
         </button>
       </div>
     </form>
+    </ToriiFrame>
   );
 }

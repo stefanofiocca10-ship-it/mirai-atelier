@@ -30,9 +30,11 @@ const createSchema = z.object({
   description: z.string().nullable().optional(),
   material: z.string().nullable().optional(),
   status: z.enum(productStatusEnum),
+  quantity: z.number().int().min(0).optional(),
   categoryIds: z.array(z.string().min(1)).min(1),
   featured: z.boolean().optional(),
   imageUrl: imageUrlField,
+  imageUrls: z.array(z.string().min(1)).optional(),
 });
 
 async function ensureUniqueProductSlug(base: string) {
@@ -50,6 +52,7 @@ async function ensureUniqueProductSlug(base: string) {
 
 const productInclude = {
   categories: { include: { category: true } },
+  images: { orderBy: { sortOrder: "asc" as const } },
 } as const;
 
 export async function GET(request: Request) {
@@ -141,6 +144,13 @@ export async function POST(request: Request) {
   const baseSlug = slugify(data.title);
   const slug = await ensureUniqueProductSlug(baseSlug);
 
+  const urls =
+    data.imageUrls && data.imageUrls.length
+      ? data.imageUrls
+      : data.imageUrl
+        ? [data.imageUrl]
+        : [];
+
   const product = await prisma.product.create({
     data: {
       title: data.title.trim(),
@@ -148,13 +158,14 @@ export async function POST(request: Request) {
       description: data.description ?? null,
       material: data.material ?? null,
       status: data.status,
+      quantity: data.quantity ?? 0,
       featured: data.featured ?? false,
-      imageUrl:
-        data.imageUrl === undefined || data.imageUrl === "" || data.imageUrl === null
-          ? null
-          : data.imageUrl,
+      imageUrl: urls[0] ?? null,
       categories: {
         create: data.categoryIds.map((categoryId) => ({ categoryId })),
+      },
+      images: {
+        create: urls.map((imageUrl, sortOrder) => ({ imageUrl, sortOrder })),
       },
     },
     include: productInclude,

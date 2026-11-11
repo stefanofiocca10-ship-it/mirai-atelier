@@ -5,7 +5,8 @@ export const SITE = {
   tagline: "Atelier di tatuaggio e piercing — precisione, calore, essenza.",
   description:
     "Studio di tatuaggio e piercing con anima wabi-sabi. Gioielleria curata, consulenze su misura e un'atmosfera d'atelier.",
-  address: "Italia",
+  /** Fallback statico — l'indirizzo ufficiale è in SiteSetting (admin → Studio) */
+  address: "Domodossola (VB)",
   email: "info@miraiatelier.it",
 } as const;
 
@@ -162,4 +163,12 @@ export const BOOKING_STATUSES = [
   { value: "CONFERMATA", label: "Confermata" },
   { value: "COMPLETATA", label: "Completata" },
   { value: "ANNULLATA", label: "Annullata" },
+] as const;
+
+/** Appuntamenti calendario atelier (ospiti) */
+export const APPOINTMENT_STATUSES = [
+  { value: "PREVISTO", label: "Previsto" },
+  { value: "CONFERMATO", label: "Confermato" },
+  { value: "COMPLETATO", label: "Completato" },
+  { value: "ANNULLATO", label: "Annullato" },
 ] as const;
