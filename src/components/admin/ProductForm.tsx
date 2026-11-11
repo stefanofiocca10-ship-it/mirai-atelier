@@ -79,7 +79,7 @@ export function ProductForm({ categories, mode, product }: Props) {
       list.push(c);
       map.set(c.zone, list);
     }
-    for (const list of map.values()) {
+    for (const list of Array.from(map.values())) {
       list.sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
     }
     return map;

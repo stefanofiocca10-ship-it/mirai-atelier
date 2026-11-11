@@ -16,7 +16,7 @@ export function buildCategoryTree(categories: Category[]): CategoryNode[] {
     list.push(c);
     byParent.set(key, list);
   }
-  for (const list of byParent.values()) {
+  for (const list of Array.from(byParent.values())) {
     list.sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
   }
 
@@ -39,7 +39,7 @@ export function groupAssignableByZone(categories: Category[]) {
     list.push(c);
     map.set(key, list);
   }
-  for (const list of map.values()) {
+  for (const list of Array.from(map.values())) {
     list.sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
   }
   return map;
