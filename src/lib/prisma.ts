@@ -17,7 +17,13 @@ function ensureVercelSqlite() {
 
   const tmpDir = "/tmp";
   const tmpDb = path.join(tmpDir, "mirai.db");
-  const bundled = path.join(process.cwd(), "prisma", "deploy.db");
+  const bundledCandidates = [
+    path.join(process.cwd(), "prisma", "deploy.db"),
+    path.join(process.cwd(), "deploy.db"),
+  ];
+  const bundled =
+    bundledCandidates.find((candidate) => existsSync(candidate)) ??
+    bundledCandidates[0];
 
   try {
     mkdirSync(tmpDir, { recursive: true });
